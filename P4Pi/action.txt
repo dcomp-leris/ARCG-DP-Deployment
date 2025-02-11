@@ -1,0 +1,8 @@
+Drop : 0
+Assign queue 1: 1
+Assign queue 2: 2
+Assign AR: 3
+class 0: [0] 
+class 1: [1]
+class 2: [2]
+class 3: [3]
