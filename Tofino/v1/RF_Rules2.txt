@@ -5,21 +5,14 @@ Rule: (1268 <= FS <= 1667) -> Predicted class: CG
 Rule: (65535 =>FS >= 1668) & (1048575 =>IPI >= 1404) -> Predicted class: CG
 Rule: (0 <= FS <= 42) -> Predicted class: Other
 
-
-
-
-
 Tree 1 predictions: [1. 1. 1. ... 1. 1. 0.]
 
 Tree 2:
 Rule: ( 1048575 > IFI > =31503) & (0= < IPI <= 973) -> Predicted class: AR
 Rule: ( 1048575 > IFI > =31503) & (974 <= IPI <= 1403) -> Predicted class: AR
-
 Rule: ( 139620>=IFI > =31503) & (1048575= >IPI > 1403) -> Predicted class: CG
 Rule: (1048575 =>IPI > 1403) & (1048575=>IFI > 139620) -> Predicted class: CG
-
 Rule: (0=<IFI <= 31502) & (0=<PS <= 55) -> Predicted class: Other
-
 Rule: (0= < IFI <= 13604) & (65535 >PS > 55) -> Predicted class: Other
 Rule: (13604 =< IFI <= 31502) & (65535=>PS > =56) ) -> Predicted class: Other
 
@@ -27,15 +20,16 @@ Rule: (13604 =< IFI <= 31502) & (65535=>PS > =56) ) -> Predicted class: Other
 Tree 2 predictions: [1. 1. 1. ... 1. 1. 0.]
 
 Tree 3:
-Rule: (IFI <= 57938) & (FS <= 44) -> Predicted class: Other
-Rule: (IFI <= 57938) & (FS > 44) & (IFI <= 20925) -> Predicted class: CG
-Rule: (IFI <= 57938) & (FS > 44) & (IFI > 20925) -> Predicted class: CG
-Rule: (IFI > 57938) & (IPI <= 1403) & (IPI <= 969) -> Predicted class: AR
-Rule: (IFI > 57938) & (IPI <= 1403) & (IPI > 969) -> Predicted class: AR
-Rule: (IFI > 57938) & (IPI > 1403) & (FS <= 42) -> Predicted class: Other
-Rule: (IFI > 57938) & (IPI > 1403) & (FS > 42) -> Predicted class: CG
-
+Rule: (57939 <= IFI <=1048575) & (0<= IPI <= 969) & (0<=FS<=65535) -> Predicted class: AR
+Rule: (57938 <= IFI <= 1048575) & (969 <=IPI <= 1403) & (0<=FS<=65535) -> Predicted class: AR 
+Rule: (0<= IFI <= 20925) & (0<= IPI <= 1048575) (45 <= FS > 65535)-> Predicted class: CG 
+Rule: (20926<= IFI <= 57938) & (0<= IPI <= 1048575) (45<= FS <= 65535) -> Predicted class: CG
+Rule: (57938<= IFI > 1048575) & (1403<= IPI <= 1048575) & (42<= FS <= 65535) -> Predicted class: CG
+Rule: (0 <= IFI <= 57938) & (0<= IPI <= 1048575) & (0<= FS <= 44) -> Predicted class: Other
+Rule: (57938<= IFI <= 1048575) & (1403<= IPI <= 1048575) & (0 <=FS <= 42) -> Predicted class: Other
 Tree 3 predictions: [1. 1. 1. ... 1. 1. 0.]
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Tree 4:
 Rule: (IFI <= 57831) & (FS <= 44) -> Predicted class: Other
@@ -46,6 +40,18 @@ Rule: (IFI > 57831) & (IPI <= 1403) & (IPI > 1062) -> Predicted class: AR
 Rule: (IFI > 57831) & (IPI > 1403) & (IPI <= 218209) -> Predicted class: CG
 Rule: (IFI > 57831) & (IPI > 1403) & (IPI > 218209) -> Predicted class: Other
 
+
+table 4:
+Rule: (57832<= IFI <= 1048575) & (0 <= IPI <= 1062) & (0<= FS <= 65535) & (0<= PS <= 65535) -> Predicted class: AR
+Rule: (57832 <= IFI <= 1048575) & (1063 <= IPI <= 1403) & (0<= FS <= 65535) & (0<= PS <= 65535) -> Predicted class: AR
+Rule: (0<= IFI <= 57831) & (0<= IPG<= 1048575) & (45 <= FS <= 65535) & (0<= PS <= 39) -> Predicted class: CG
+Rule: (0<= IFI <= 57831) & (0<= IPG<= 1048575) & (45 <= FS <= 65535) & (40 <= PS <= 65535) -> Predicted class: CG
+Rule: (57832<= IFI <= 1048575) & (1404 <= IPI <= 218209) & (0<= FS <= 65535) & (0<= PS <= 65535) -> Predicted class: CG
+Rule: (0<= IFI <= 57831) & (0<= IPG<= 1048575) (0 <= FS <= 44) & (0<= PS <= 65535) -> Predicted class: Other
+Rule: (57832 <= IFI <= 1048575) & (218209<= IPI <= 1048575) & (0<= FS <= 65535) & (0<= PS <= 65535) -> Predicted class: Other
+
+
+
 Tree 4 predictions: [1. 1. 1. ... 1. 1. 0.]
 
 Tree 5:
@@ -54,6 +60,15 @@ Rule: (FS > 42) & (IPI <= 1382) & (FS <= 1942) -> Predicted class: AR
 Rule: (FS > 42) & (IPI <= 1382) & (FS > 1942) -> Predicted class: AR
 Rule: (FS > 42) & (IPI > 1382) & (IPI <= 1489) -> Predicted class: CG
 Rule: (FS > 42) & (IPI > 1382) & (IPI > 1489) -> Predicted class: CG
+
+
+table5 :
+Rule: (0<=IPI <= 1382) & (42<= FS <= 1942)  -> Predicted class: AR
+Rule: (0<= IPI <= 1382) & (1943<= FS <= 65536) -> Predicted class: AR
+Rule: (1382<= IPI <= 1489) & (43<= FS <=  65536) -> Predicted class: CG
+Rule: (1489<= IPI > 1048575) & (43 <= FS <=65536 ) -> Predicted class: CG
+Rule: (0 <= IPG <= 1048575) & (0 <= FS <= 42) -> Predicted class: Other
+
 
 Tree 5 predictions: [1. 1. 1. ... 1. 1. 0.]
 
