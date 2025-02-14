@@ -1,6 +1,6 @@
 # In-Network AR/CG Traffic Classification Entirely Deployed in the Programmable Data Plane: Unlocking RTP Features and L4S Integration
 
-[![Click Me](https://img.shields.io/badge/Click%20Me-Visit%20Now-blue)]([https://example.com](https://netsoft2025.ieee-netsoft.org/))
+[![netsoft2025](https://img.shields.io/badge/Click%20Me-Visit%20Now-blue)](https://netsoft2025.ieee-netsoft.org)
 
 
 [The repository is related to the paper submitted to the Netsoft' 2025 conference and it is under construction!]
