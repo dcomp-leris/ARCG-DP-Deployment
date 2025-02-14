@@ -1176,7 +1176,7 @@ control SwitchIngress(
 
         bit<8> marking_decision = read_marking_register.execute(ig_md.metadata_flowID);
 
-        if(!hdr.nodeCount.isValid()){
+        // if(!hdr.nodeCount.isValid()){
             if(marking_decision == 1){
                 hdr.ipv4.ecn = 1;
                 hdr.ipv4.dscp = 46;
@@ -1192,7 +1192,7 @@ control SwitchIngress(
             if(hdr.ipv4.ecn == 1){
                 ig_tm_md.qid = 1;
             }
-        }
+        // }
 
         //** Insert ingress timestamp into bridge header to be used in the egress**//
         hdr.bridge.setValid();
