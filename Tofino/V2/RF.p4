@@ -1175,7 +1175,7 @@ control SwitchIngress(
             find_flowID_ipv4_udp();
         }
 
-        bit<8> ig_md.metadata_marking_decision = read_marking_register.execute(ig_md.metadata_flowID);
+        ig_md.metadata_marking_decision = read_marking_register.execute(ig_md.metadata_flowID);
 
         if(!hdr.nodeCount.isValid()){//not classify
             if(ig_md.metadata_marking_decision == 1){
