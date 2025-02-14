@@ -1193,18 +1193,19 @@ control SwitchIngress(
             hdr.ipv4.dscp = 50;
         }
 
-        if(hdr.ipv4.ecn == 1){
-            ig_tm_md.qid = 1;
-        }
+       
 
         //** Insert ingress timestamp into bridge header to be used in the egress**//
         hdr.bridge.setValid();
         hdr.bridge.bridge_ingress_port = (bit<16>)ig_intr_md.ingress_port;
         hdr.bridge.ingress_global_tstamp = ig_intr_prsr_md.global_tstamp;
-        hdr.bridge.bridge_qid = (bit<16>)ig_tm_md.qid; 
-
-        //ig_tm_md.ucast_egress_port = 100; //"""drop the original"
+         
+        
+        if(hdr.ipv4.ecn == 1){
+            ig_tm_md.qid = 1;
+        }        //ig_tm_md.ucast_egress_port = 100; //"""drop the original"
         //decisionMirror();
+        hdr.bridge.bridge_qid = (bit<16>)ig_tm_md.qid;
 
         
         //hdr.cute_new_header.setInvalid();
