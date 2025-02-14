@@ -67,7 +67,7 @@ const bit<2>  RTP_VERSION = 2;
     header_info_t header_info
 
 #define MAX_HOPS 10
-#define NUMBER_OF_QUEUES 2 //CLASSIC L4S AND CG
+#define NUMBER_OF_QUEUES 3 //CLASSIC L4S AND CG
 
 /*** Headers ***/
 header ethernet_h {
@@ -1173,26 +1173,20 @@ control SwitchIngress(
         else if(hdr.udp.isValid()){
             find_flowID_ipv4_udp();
         }
-
         bit<8> marking_decision = read_marking_register.execute(ig_md.metadata_flowID);
 
-        // if(!hdr.nodeCount.isValid()){
-            if(marking_decision == 1){
-                hdr.ipv4.ecn = 1;
-                hdr.ipv4.dscp = 46;
-            }
-            else if(marking_decision == 2){
-                hdr.ipv4.ecn = 1;
-                hdr.ipv4.dscp = 34;
-            }
-            else if(marking_decision == 3){
-                hdr.ipv4.dscp = 50;
-            }
 
-            if(hdr.ipv4.ecn == 1){
-                ig_tm_md.qid = 1;
-            }
-        // }
+        if(marking_decision == 1){
+            hdr.ipv4.ecn = 1;
+            hdr.ipv4.dscp = 46;
+        }
+        else if(marking_decision == 2){
+            hdr.ipv4.ecn = 1;
+            hdr.ipv4.dscp = 34;
+        }
+        else if(marking_decision == 3){
+            hdr.ipv4.dscp = 50;
+        }
 
         //** Insert ingress timestamp into bridge header to be used in the egress**//
         hdr.bridge.setValid();
@@ -1472,7 +1466,8 @@ control Egress(
 
         
         RegisterAction<bit<16>, bit<16>, bit<16>>(index_reg) store_index_reg = {
-            void apply(inout bit<16> value) {
+            void apply(inout bit<16> value, out bit<16> result) {
+                result = eg_md.metadata_index;
                 value = eg_md.metadata_index;
             }
         };
@@ -1941,25 +1936,24 @@ control Egress(
                 eg_md.metadata_index = 0x03;
             }
         }
-        //when have 3 queues
-        // else if(hdr.bridge.bridge_qid == 2){
-        //     if(eg_intr_md.egress_port == 136){ 
-        //         //tem 2 casos: com int e sem int
-        //         // if(nodeCount.isValid()){
-        //         //     eg_md.metadata_index = 0x02;
-        //         // }
-        //         eg_md.metadata_index = 0x04;
-        //     }
-        //     else if(eg_intr_md.egress_port == 137){
-        //         eg_md.metadata_index = 0x05;
-        //     }
-        //     else{//loopbackport com int
-        //         eg_md.metadata_index = 0x05;
-        //     }
-        // }
+        else if(hdr.bridge.bridge_qid == 2){
+            if(eg_intr_md.egress_port == 136){ 
+                //tem 2 casos: com int e sem int
+                // if(nodeCount.isValid()){
+                //     eg_md.metadata_index = 0x02;
+                // }
+                eg_md.metadata_index = 0x04;
+            }
+            else if(eg_intr_md.egress_port == 137){
+                eg_md.metadata_index = 0x05;
+            }
+            else{//loopbackport com int
+                eg_md.metadata_index = 0x05;
+            }
+        }
 
 
-        store_index_reg.execute(0); 
+        bit<16> nada = store_index_reg.execute(0); 
 
 
 
@@ -2072,7 +2066,7 @@ control Egress(
                     if (drop_decision_l4s == true){
                         
                         mark_ecn_pkt.count((bit<32>)eg_md.metadata_index);
-                        hdr.ipv4.ecn = 3;    
+                        //hdr.ipv4.ecn = 3;    
                     
                     } 
 
@@ -2095,7 +2089,7 @@ control Egress(
                 //if (hdr.ipv4.l4s == 1){
                 if(hdr.ipv4.ecn == 1 || hdr.ipv4.ecn == 2){ //MARKING L4S AND CG
                         mark_ecn_pkt.count((bit<32>)eg_md.metadata_index);
-                        hdr.ipv4.ecn = 3;
+                        //hdr.ipv4.ecn = 3;
 
                 }
                 // else{
