@@ -1192,7 +1192,6 @@ control SwitchIngress(
         else if(marking_decision == 3){
             hdr.ipv4.dscp = 50;
         }
-        ig_tm_md.qid = 0;
         // if(hdr.ipv4.ecn == 1){
         //     //ig_tm_md.qid = 1;
         // }
