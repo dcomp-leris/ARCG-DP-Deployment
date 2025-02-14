@@ -7,7 +7,7 @@
 This paper has been submitted to the Netsoft 2025 Conference and is under review!
 
 
-## (1) Connect & Clone P4 Code
+## (1) Connect Tofino & Clone P4 Code
       ssh [username]@[IP]    # Replace your username & Tofino IP
       pass: xxxx             # Tofino password
 
