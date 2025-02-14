@@ -1194,7 +1194,7 @@ control SwitchIngress(
         }
 
         if(hdr.ipv4.ecn == 1){
-            ig_tm.qid =1;
+            ig_tm_md.qid = 1;
         }
 
         //** Insert ingress timestamp into bridge header to be used in the egress**//
