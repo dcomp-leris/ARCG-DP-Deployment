@@ -1176,7 +1176,7 @@ control SwitchIngress(
         
         bit<8> marking_decision = read_marking_register.execute(ig_md.metadata_flowID);
 
-        if(hdr.nodeCount.isValid){
+        if(hdr.nodeCount.isValid()){
             marking_decision = 0;
         }
 
