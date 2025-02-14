@@ -1173,9 +1173,14 @@ control SwitchIngress(
         else if(hdr.udp.isValid()){
             find_flowID_ipv4_udp();
         }
+        
         bit<8> marking_decision = read_marking_register.execute(ig_md.metadata_flowID);
 
+        if(hdr.nodeCount.isValid){
+            marking_decision = 0
+        }
 
+        
         if(marking_decision == 1){
             hdr.ipv4.ecn = 1;
             hdr.ipv4.dscp = 46;
