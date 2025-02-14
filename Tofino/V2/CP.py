@@ -89,69 +89,86 @@ bfrt.RF_deployment_5trees.pipe.SwitchIngress.lpf_ipg.add(0,'SAMPLE', 100000000, 
 bfrt.RF_deployment_5trees.pipe.SwitchIngress.lpf_ifg.add(0,'SAMPLE', 100000000, 100000000,0)
 
 
-#TABLE CLASSIFICATION
+#newtable classification
 #tree1
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree1.add_with_classify_result1(metadata_frame_size_start=1668, metadata_frame_size_end=65535, metadata_ipg_20lsb_start=0, metadata_ipg_20lsb_end = 1403, classify_result=1)
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree1.add_with_classify_result2(metadata_frame_size_start=43, metadata_frame_size_end=1267, metadata_ipg_20lsb_start = 0, metadata_ipg_20lsb_end = 1048575, classify_result=2)
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree1.add_with_classify_result2(metadata_frame_size_start=1268, metadata_frame_size_end=1667, metadata_ipg_20lsb_start=0, metadata_ipg_20lsb_end = 1048575, classify_result=2)
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree1.add_with_classify_result2(metadata_frame_size_start=166, metadata_frame_size_end=65535, metadata_ipg_20lsb_start=1404, metadata_ipg_20lsb_end = 1048575, classify_result=2)
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree1.add_with_classify_result3(metadata_frame_size_start=0, metadata_frame_size_end=42, metadata_ipg_20lsb_start=0, metadata_ipg_20lsb_end = 1048575, classify_result=3)
+#FS
+bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_T1_FS.add_with_classify_T1_FS(metadata_frame_size_start=0, metadata_frame_size_end=42, classify_result=3)
+bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_T1_FS.add_with_classify_T1_FS(metadata_frame_size_start=43, metadata_frame_size_end=1667, classify_result=2)
+bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_T1_FS.add_with_classify_T1_FS(metadata_frame_size_start=1668, metadata_frame_size_end=65535, classify_result=0)
 
-#tree2
-#ar
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree2.add_with_classify_result1(metadata_ifg_20lsb_start = 31503,metadata_ifg_20lsb_end = 1048575, metadata_ipg_20lsb_start= 0, metadata_ipg_20lsb_end = 973, metadata_packet_size_start = 0, metadata_packet_size_end = 65535, classify_result=1)
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree2.add_with_classify_result1(metadata_ifg_20lsb_start = 31503,metadata_ifg_20lsb_end = 1048575, metadata_ipg_20lsb_start= 974, metadata_ipg_20lsb_end = 1403, metadata_packet_size_start = 0, metadata_packet_size_end = 65535, classify_result=1)
-#cg
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree2.add_with_classify_result2(metadata_ifg_20lsb_start = 31503,metadata_ifg_20lsb_end = 139620, metadata_ipg_20lsb_start= 1404, metadata_ipg_20lsb_end = 1048575, metadata_packet_size_start = 0, metadata_packet_size_end = 65535, classify_result=2)
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree2.add_with_classify_result2(metadata_ifg_20lsb_start = 139621,metadata_ifg_20lsb_end = 1048575, metadata_ipg_20lsb_start= 1404, metadata_ipg_20lsb_end = 1048575, metadata_packet_size_start = 0, metadata_packet_size_end = 65535, classify_result=2)
-#other
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree2.add_with_classify_result3(metadata_ifg_20lsb_start = 0,metadata_ifg_20lsb_end = 31502, metadata_ipg_20lsb_start= 0, metadata_ipg_20lsb_end = 1048575, metadata_packet_size_start = 0, metadata_packet_size_end = 55, classify_result=3)
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree2.add_with_classify_result3(metadata_ifg_20lsb_start = 0,metadata_ifg_20lsb_end = 13604, metadata_ipg_20lsb_start= 0, metadata_ipg_20lsb_end = 1048575, metadata_packet_size_start = 56, metadata_packet_size_end = 65535, classify_result=3)
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree2.add_with_classify_result3(metadata_ifg_20lsb_start = 13605,metadata_ifg_20lsb_end = 31502, metadata_ipg_20lsb_start= 0, metadata_ipg_20lsb_end = 1048575, metadata_packet_size_start = 56, metadata_packet_size_end = 65535, classify_result=3)
+#IPG
+bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_T1_IPG.add_with_classify_T1_IPG(metadata_ipg_20lsb_start=0, metadata_ipg_20lsb_end=1403, classify_result=1)
+bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_T1_IPG.add_with_classify_T1_IPG(metadata_ipg_20lsb_start=1404, metadata_ipg_20lsb_end=1048575, classify_result=2)
 
-#tree3
-#ar
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree3.add_with_classify_result1(metadata_ifg_20lsb_start = 57939,metadata_ifg_20lsb_end = 1048575, metadata_ipg_20lsb_start= 0, metadata_ipg_20lsb_end = 969, metadata_frame_size_start = 0, metadata_frame_size_end = 65535, classify_result=1)
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree3.add_with_classify_result1(metadata_ifg_20lsb_start = 57938,metadata_ifg_20lsb_end = 1048575, metadata_ipg_20lsb_start= 969, metadata_ipg_20lsb_end = 1403, metadata_frame_size_start = 0, metadata_frame_size_end = 65535, classify_result=1)
-#cg
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree3.add_with_classify_result2(metadata_ifg_20lsb_start = 0,metadata_ifg_20lsb_end = 20925, metadata_ipg_20lsb_start= 0, metadata_ipg_20lsb_end = 1048575, metadata_frame_size_start = 45, metadata_frame_size_end = 65535, classify_result=2)
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree3.add_with_classify_result2(metadata_ifg_20lsb_start = 20926,metadata_ifg_20lsb_end = 57938, metadata_ipg_20lsb_start= 0, metadata_ipg_20lsb_end = 1048575, metadata_frame_size_start = 45, metadata_frame_size_end = 65535, classify_result=2)
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree3.add_with_classify_result2(metadata_ifg_20lsb_start = 57938,metadata_ifg_20lsb_end = 1048575, metadata_ipg_20lsb_start= 1403, metadata_ipg_20lsb_end = 1048575, metadata_frame_size_start = 42, metadata_frame_size_end = 65535, classify_result=2)
-#other
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree3.add_with_classify_result3(metadata_ifg_20lsb_start = 0,metadata_ifg_20lsb_end = 57938, metadata_ipg_20lsb_start= 0, metadata_ipg_20lsb_end = 1048575, metadata_frame_size_start = 0, metadata_frame_size_end = 44, classify_result=3)
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree3.add_with_classify_result3(metadata_ifg_20lsb_start = 57938,metadata_ifg_20lsb_end = 1048575, metadata_ipg_20lsb_start= 1403, metadata_ipg_20lsb_end = 1048575, metadata_frame_size_start = 0, metadata_frame_size_end = 42, classify_result=3)
+#t2
+#IFG
+bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_T2_IFG.add_with_classify_T2_IFG(metadata_ifg_20lsb_start=0, metadata_ifg_20lsb_end=31502, classify_result=3)
+bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_T2_IFG.add_with_classify_T2_IFG(metadata_ifg_20lsb_start=31503, metadata_ifg_20lsb_end=1048575, classify_result=0)
 
-#tree4
-#ar
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree4.add_with_classify_result1(metadata_ifg_20lsb_start = 57832,metadata_ifg_20lsb_end = 1048575, metadata_ipg_20lsb_start= 0, metadata_ipg_20lsb_end = 1062, metadata_frame_size_start = 0, metadata_frame_size_end = 65535, metadata_packet_size_start = 0, metadata_packet_size_end = 65535,classify_result=1)
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree4.add_with_classify_result1(metadata_ifg_20lsb_start = 57832,metadata_ifg_20lsb_end = 1048575, metadata_ipg_20lsb_start= 1063, metadata_ipg_20lsb_end = 1403, metadata_frame_size_start = 0, metadata_frame_size_end = 65535, metadata_packet_size_start = 0, metadata_packet_size_end = 65535,classify_result=1)
-#cg
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree4.add_with_classify_result2(metadata_ifg_20lsb_start = 0,metadata_ifg_20lsb_end = 57831, metadata_ipg_20lsb_start= 0, metadata_ipg_20lsb_end = 1048575, metadata_frame_size_start = 45, metadata_frame_size_end = 65535, metadata_packet_size_start = 0, metadata_packet_size_end = 39,classify_result=2)
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree4.add_with_classify_result2(metadata_ifg_20lsb_start = 0,metadata_ifg_20lsb_end = 57831, metadata_ipg_20lsb_start= 0, metadata_ipg_20lsb_end = 1048575, metadata_frame_size_start = 45, metadata_frame_size_end = 65535, metadata_packet_size_start = 40, metadata_packet_size_end = 65535,classify_result=2)
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree4.add_with_classify_result2(metadata_ifg_20lsb_start = 57832,metadata_ifg_20lsb_end = 1048575, metadata_ipg_20lsb_start= 1404, metadata_ipg_20lsb_end = 218209, metadata_frame_size_start = 0, metadata_frame_size_end = 65535, metadata_packet_size_start = 0, metadata_packet_size_end = 65535,classify_result=2)
-#other
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree4.add_with_classify_result3(metadata_ifg_20lsb_start = 0,metadata_ifg_20lsb_end = 57831, metadata_ipg_20lsb_start= 0, metadata_ipg_20lsb_end = 1048575, metadata_frame_size_start = 0, metadata_frame_size_end = 44, metadata_packet_size_start = 0, metadata_packet_size_end = 65535,classify_result=3)
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree4.add_with_classify_result3(metadata_ifg_20lsb_start = 57832,metadata_ifg_20lsb_end = 1048575, metadata_ipg_20lsb_start= 218209, metadata_ipg_20lsb_end = 1048575, metadata_frame_size_start = 0, metadata_frame_size_end = 65535, metadata_packet_size_start = 0, metadata_packet_size_end = 65535,classify_result=3)
+#IPG
+bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_T2_IPG.add_with_classify_T2_IPG(metadata_ipg_20lsb_start=0, metadata_ipg_20lsb_end=1403, classify_result=1)
+bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_T2_IPG.add_with_classify_T2_IPG(metadata_ipg_20lsb_start=1404, metadata_ipg_20lsb_end=1048575, classify_result=2)
+
+#T3
+#FS
+bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_T3_FS.add_with_classify_T3_FS(metadata_frame_size_start=0, metadata_frame_size_end=42, classify_result=3)
+bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_T3_FS.add_with_classify_T3_FS(metadata_frame_size_start=43, metadata_frame_size_end=65535, classify_result=0)
+
+#IFG
+bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_T3_IFG.add_with_classify_T3_IFG(metadata_ifg_20lsb_start=0, metadata_ifg_20lsb_end=57938, classify_result=2)
+bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_T3_IFG.add_with_classify_T3_IFG(metadata_ifg_20lsb_start=57939, metadata_ifg_20lsb_end=1048575, classify_result=0)
+
+#IPG
+bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_T3_IPG.add_with_classify_T3_IPG(metadata_ipg_20lsb_start=0, metadata_ipg_20lsb_end=1403, classify_result=1)
+bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_T3_IPG.add_with_classify_T3_IPG(metadata_ipg_20lsb_start=1404, metadata_ipg_20lsb_end=1048575, classify_result=2)
 
 
-#tree5
-#ar
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree5.add_with_classify_result1(metadata_ipg_20lsb_start= 0, metadata_ipg_20lsb_end = 1382, metadata_frame_size_start = 42, metadata_frame_size_end = 1942,classify_result=1)
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree5.add_with_classify_result1(metadata_ipg_20lsb_start= 0, metadata_ipg_20lsb_end = 1382, metadata_frame_size_start = 1943, metadata_frame_size_end = 65535,classify_result=1)
-#cg
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree5.add_with_classify_result2(metadata_ipg_20lsb_start= 1382, metadata_ipg_20lsb_end = 1489, metadata_frame_size_start = 43, metadata_frame_size_end = 65535,classify_result=2)
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree5.add_with_classify_result2(metadata_ipg_20lsb_start= 1489, metadata_ipg_20lsb_end = 1048575, metadata_frame_size_start = 43, metadata_frame_size_end = 65535,classify_result=2)
-#other
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_tree5.add_with_classify_result3(metadata_ipg_20lsb_start= 0, metadata_ipg_20lsb_end = 1048575, metadata_frame_size_start = 0, metadata_frame_size_end = 42,classify_result=3)
+#T4
+#IFG
+bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_T4_IFG.add_with_classify_T4_IFG(metadata_ifg_20lsb_start=0, metadata_ifg_20lsb_end=57831, classify_result=6)
+bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_T4_IFG.add_with_classify_T4_IFG(metadata_ifg_20lsb_start=57832, metadata_ifg_20lsb_end=1048575, classify_result=5)
+
+#FS
+bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_T4_FS.add_with_classify_T4_FS(metadata_frame_size_start=0, metadata_frame_size_end=44, classify_result=3)
+bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_T4_FS.add_with_classify_T4_FS(metadata_frame_size_start=45, metadata_frame_size_end=65535, classify_result=2)
+
+#IPG
+bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_T4_IPG.add_with_classify_T4_IPG(metadata_ipg_20lsb_start=0, metadata_ipg_20lsb_end=1403, classify_result=1)
+bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_T4_IPG.add_with_classify_T4_IPG(metadata_ipg_20lsb_start=1403, metadata_ipg_20lsb_end=218208, classify_result=2)
+bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_T4_IPG.add_with_classify_T4_IPG(metadata_ipg_20lsb_start=218208, metadata_ipg_20lsb_end=1048575, classify_result=3)
+
+#T5
+#FS
+bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_T5_FS.add_with_classify_T5_FS(metadata_frame_size_start=0, metadata_frame_size_end=42, classify_result=3)
+bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_T5_FS.add_with_classify_T5_FS(metadata_frame_size_start=43, metadata_frame_size_end=65535, classify_result=0)
+#IPG
+bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_T5_IPG.add_with_classify_T5_IPG(metadata_ipg_20lsb_start=0, metadata_ipg_20lsb_end=1382, classify_result=1)
+bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_T5_IPG.add_with_classify_T5_IPG(metadata_ipg_20lsb_start=1383, metadata_ipg_20lsb_end=1048575, classify_result=2)
+
+#FINAL CLASS
+with open("/home/leris/p4code/alireza/RF_deployment/CLONE_EGRESS/change_mirror/TABLES/5trees/majority.txt", "r") as f:
+    for line in f:
+        line = line.strip()
+        if not line:
+            continue  # Skip empty lines
+
+        # Expected format: t1=1,t2=2,t3=2,t4=2,t5=2,m=2
+        parts = line.split(',')
+        votes = {}
+        for part in parts:
+            key, value = part.split('=')
+            votes[key.strip()] = int(value.strip())
+
+        # Use the BFRT API to add the entry
+        bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_majority.add_with_final_classification(
+            metadata_classT1 = votes['t1'],
+            metadata_classT2 = votes['t2'],
+            metadata_classT3 = votes['t3'],
+            metadata_classT4 = votes['t4'],
+            metadata_classT5 = votes['t5'],
+            majority        = votes['m']
+        )
+
+#bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_majority.add_with_final_classification(metadata_classT1 = t1, metadata_classT2 = t2, metadata_classT3 = t3, metadata_classT1=t4, metadata_classT1=t5, majority = majority)
 
 
-
-#majority
-#if one of them is 3,4 or 5
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_check_majority.add_with_set_majority(contador1_start=3, contador1_end=5, majority=1) 
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_check_majority.add_with_set_majority(contador2_start=3, contador2_end=5, majority=2) 
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_check_majority.add_with_set_majority(contador3_start=3, contador3_end=5, majority=3) 
-#if there is two 2's
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_check_majority.add_with_set_majority(contador1_start=2, contador1_end=2, contador2_start=2, contador2_end=2, majority=1) 
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_check_majority.add_with_set_majority(contador1_start=2, contador1_end=2, contador3_start=2, contador3_end=2, majority=1) 
-bfrt.RF_deployment_5trees.pipe.SwitchIngress.table_check_majority.add_with_set_majority(contador2_start=2, contador2_end=2, contador3_start=2, contador3_end=2, majority=2) 
