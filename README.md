@@ -6,11 +6,17 @@
 [The repository is related to the paper submitted to the Netsoft' 2025 conference and it is under construction!]
 
 
-## (1) Connect to Tofino2
+## (1) Connect to Tofino
    ssh [username]@[IP]    # Replace your username & Tofino IP
    pass: xxxx             # Tofino password
 
-   
+   #Clone the Repository on your Tofino
+   git clone https://github.com/dcomp-leris/ARCG-DP-Deployment.git
+
+**Output:**
+
+   ![image](https://github.com/user-attachments/assets/59d0e906-fa76-41dd-93be-78a22efd0c05)
+
 
 
 
