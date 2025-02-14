@@ -1174,9 +1174,9 @@ control SwitchIngress(
             find_flowID_ipv4_udp();
         }
 
-
+        bit<8> marking_decision;
         if(!hdr.nodeCount.isValid()){ //dont classify int
-            bit<8> marking_decision = read_marking_register.execute(ig_md.metadata_flowID);
+            marking_decision = read_marking_register.execute(ig_md.metadata_flowID);
         }
 
 
