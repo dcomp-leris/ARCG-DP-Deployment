@@ -1193,6 +1193,10 @@ control SwitchIngress(
             hdr.ipv4.dscp = 50;
         }
 
+        if(hdr.ipv4.ecn == 1){
+            ig_tm.qid =1;
+        }
+
         //** Insert ingress timestamp into bridge header to be used in the egress**//
         hdr.bridge.setValid();
         hdr.bridge.bridge_ingress_port = (bit<16>)ig_intr_md.ingress_port;
