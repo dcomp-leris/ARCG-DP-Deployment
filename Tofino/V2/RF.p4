@@ -1174,22 +1174,20 @@ control SwitchIngress(
             find_flowID_ipv4_udp();
         }
 
-        bit<8> marking_decision;
-        if(!hdr.nodeCount.isValid()){ //dont classify int
-            marking_decision = read_marking_register.execute(ig_md.metadata_flowID);
-        }
+        bit<8> marking_decision = read_marking_register.execute(ig_md.metadata_flowID);
 
-
-        if(marking_decision == 1){
-            hdr.ipv4.ecn = 1;
-            hdr.ipv4.dscp = 46;
-        }
-        else if(marking_decision == 2){
-            hdr.ipv4.ecn = 1;
-            hdr.ipv4.dscp = 34;
-        }
-        else if(marking_decision == 3){
-            hdr.ipv4.dscp = 50;
+        if(!hdr.nodeCount.isValid()){//not classify int
+            if(marking_decision == 1){
+                hdr.ipv4.ecn = 1;
+                hdr.ipv4.dscp = 46;
+            }
+            else if(marking_decision == 2){
+                hdr.ipv4.ecn = 1;
+                hdr.ipv4.dscp = 34;
+            }
+            else if(marking_decision == 3){
+                hdr.ipv4.dscp = 50;
+            }
         }
 
         if(hdr.ipv4.ecn == 1){
