@@ -267,6 +267,7 @@ struct metadata_t{
     bit<8> metadata_classT4;
     bit<8> metadata_classT5;
     bit<8> metadata_final_classification;
+    bit<8> metadata_marking_decision;
 }
 
 
@@ -1174,18 +1175,18 @@ control SwitchIngress(
             find_flowID_ipv4_udp();
         }
 
-        bit<8> marking_decision = read_marking_register.execute(ig_md.metadata_flowID);
+        bit<8> ig_md.metadata_marking_decision = read_marking_register.execute(ig_md.metadata_flowID);
 
-        if(!hdr.nodeCount.isValid()){//not classify int
-            if(marking_decision == 1){
+        if(!hdr.nodeCount.isValid()){//not classify
+            if(ig_md.metadata_marking_decision == 1){
                 hdr.ipv4.ecn = 1;
                 hdr.ipv4.dscp = 46;
             }
-            else if(marking_decision == 2){
+            else if(ig_md.metadata_marking_decision == 2){
                 hdr.ipv4.ecn = 1;
                 hdr.ipv4.dscp = 34;
             }
-            else if(marking_decision == 3){
+            else if(ig_md.metadata_marking_decision == 3){
                 hdr.ipv4.dscp = 50;
             }
         }
