@@ -1183,19 +1183,22 @@ control SwitchIngress(
 
         if(marking_decision == 1){
             hdr.ipv4.ecn = 1;
+            ig_tm_md.qid =1;
             hdr.ipv4.dscp = 46;
         }
         else if(marking_decision == 2){
             hdr.ipv4.ecn = 1;
+            ig_tm_md.qid =1;
             hdr.ipv4.dscp = 34;
         }
         else if(marking_decision == 3){
             hdr.ipv4.dscp = 50;
+            ig_tm_md.qid =0;
         }
 
-        if(hdr.ipv4.ecn == 1){
-            ig_tm_md.qid =1;
-        }
+        // if(hdr.ipv4.ecn == 1){
+        //     ig_tm_md.qid =1;
+        // }
 
         //** Insert ingress timestamp into bridge header to be used in the egress**//
         hdr.bridge.setValid();
