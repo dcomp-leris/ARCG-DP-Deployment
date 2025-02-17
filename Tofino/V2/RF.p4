@@ -128,6 +128,15 @@ header rtp_t {
 
 }
 
+header classification_h {
+    bit<8> metadata_classT1;
+    bit<8> metadata_classT2;
+    bit<8> metadata_classT3;
+    bit<8> metadata_classT4;
+    bit<8> metadata_classT5;
+    bit<8> metadata_final_classification;
+}
+
 //  hdr.INT[0].ingress_port = (ingress_port_v)standard_metadata.ingress_port;
 //         hdr.INT[0].egress_port = (egress_port_v)standard_metadata.egress_port;
 //         hdr.INT[0].egress_spec = (egressSpec_v)standard_metadata.egress_spec;
@@ -163,6 +172,7 @@ header mirror_h {
 
 
 
+
 //*** Bridge header to carry ingress timestamp from Ingress to Egress ***//
 header bridge_h {
     bit<16> bridge_ingress_port; //9bits tem que bater 64...
@@ -175,6 +185,7 @@ header nodeCount_h{
     bit<16>  id;
     bit<16>  count;
 }
+
 
 
 
@@ -229,6 +240,9 @@ struct parser_metadata_t {
 
 
 struct metadata_t{
+    
+    classification_h classification; // Alireza 
+
     bridge_h    bridge;
     mirror_h    mirror;
     MirrorId_t  mirror_session;
@@ -239,12 +253,13 @@ struct metadata_t{
     //bit<32> queue_delay;
     ingress_metadata_t   ingress_metadata;
     parser_metadata_t   parser_metadata;
+    //bit<8> qid; // Alireza
     bit<16> metadata_index;
     bit<32> metadata_enq_qdepth;
     bit<32> metadata_queue_delay;
     bit<32> metadata_totalPkts;
     bit<32> metadata_input_ipg;
-
+    
     bit<32> metadata_ifg;
     bit<32> metadata_ifg_temp;
     bit<32> metadata_ipg;
@@ -259,12 +274,13 @@ struct metadata_t{
     // bit<8> metadata_counter1;
     // bit<8> metadata_counter2;
     // bit<8> metadata_counter3;
-    bit<8> metadata_classT1;
-    bit<8> metadata_classT2;
-    bit<8> metadata_classT3;
-    bit<8> metadata_classT4;
-    bit<8> metadata_classT5;
-    bit<8> metadata_final_classification;
+    
+    //bit<8> metadata_classT1;
+    //bit<8> metadata_classT2;
+    //bit<8> metadata_classT3;
+    //bit<8> metadata_classT4;
+    //bit<8> metadata_classT5;
+    //bit<8> metadata_final_classification;
     bit<20> metadata_ipg_20lsb;
     bit<20> metadata_ifg_20lsb;
 }
@@ -591,7 +607,7 @@ control SwitchIngress(
 
     RegisterAction<bit<8>, bit<8>, bit<8>>(marking_register)  store_marking_register = {
             void apply(inout bit<8> value) {
-                value = ig_md.metadata_final_classification;
+                value = (bit<8>) ig_md.classification.metadata_final_classification;  //ig_md.metadata_final_classification;
             }
 
     };
@@ -599,7 +615,7 @@ control SwitchIngress(
     Register<bit<8>, _> (N_PORTS) metadata_classT1;
     RegisterAction<bit<8>, bit<8>, bit<8>>(metadata_classT1)  store_metadata_classT1 = {
             void apply(inout bit<8> value) {
-                value = ig_md.metadata_classT1;
+                value = ig_md.classification.metadata_classT1;
             }
 
     };
@@ -607,7 +623,7 @@ control SwitchIngress(
     Register<bit<8>, _> (N_PORTS) metadata_classT2;
     RegisterAction<bit<8>, bit<8>, bit<8>>(metadata_classT2)  store_metadata_classT2 = {
             void apply(inout bit<8> value) {
-                value = ig_md.metadata_classT2;
+                value = ig_md.classification.metadata_classT2;
             }
 
     };
@@ -615,7 +631,7 @@ control SwitchIngress(
     Register<bit<8>, _> (N_PORTS) metadata_classT3;
     RegisterAction<bit<8>, bit<8>, bit<8>>(metadata_classT3)  store_metadata_classT3 = {
             void apply(inout bit<8> value) {
-                value = ig_md.metadata_classT3;
+                value = ig_md.classification.metadata_classT3;
             }
 
     };
@@ -623,7 +639,7 @@ control SwitchIngress(
     Register<bit<8>, _> (N_PORTS) metadata_classT4;
     RegisterAction<bit<8>, bit<8>, bit<8>>(metadata_classT4)  store_metadata_classT4 = {
             void apply(inout bit<8> value) {
-                value = ig_md.metadata_classT4;
+                value = ig_md.classification.metadata_classT4;
             }
 
     };
@@ -631,7 +647,7 @@ control SwitchIngress(
     Register<bit<8>, _> (N_PORTS) metadata_classT5;
     RegisterAction<bit<8>, bit<8>, bit<8>>(metadata_classT5)  store_metadata_classT5 = {
             void apply(inout bit<8> value) {
-                value = ig_md.metadata_classT5;
+                value = ig_md.classification.metadata_classT5;
             }
 
     };
@@ -640,11 +656,11 @@ control SwitchIngress(
 
     //T1
     action classify_T1_FS(bit<8> classify_result){
-        ig_md.metadata_classT1 = classify_result;
+        ig_md.classification.metadata_classT1 = classify_result;
     }
 
     action classify_T1_IPG(bit<8> classify_result){
-        ig_md.metadata_classT1 = classify_result;
+        ig_md.classification.metadata_classT1 = classify_result;
     }
 
     table table_T1_FS{
@@ -673,11 +689,11 @@ control SwitchIngress(
 
     //T2
     action classify_T2_IFG(bit<8> classify_result){
-        ig_md.metadata_classT2 = classify_result;
+        ig_md.classification.metadata_classT2 = classify_result;
     }
 
     action classify_T2_IPG(bit<8> classify_result){
-        ig_md.metadata_classT2 = classify_result;
+        ig_md.classification.metadata_classT2 = classify_result;
     }
     
     table table_T2_IFG{
@@ -705,15 +721,15 @@ control SwitchIngress(
     }
 
     action classify_T3_FS(bit<8> classify_result){
-        ig_md.metadata_classT3 = classify_result;
+        ig_md.classification.metadata_classT3 = classify_result;
     }
 
     action classify_T3_IFG(bit<8> classify_result){
-        ig_md.metadata_classT3 = classify_result;
+        ig_md.classification.metadata_classT3 = classify_result;
     }
 
     action classify_T3_IPG(bit<8> classify_result){
-        ig_md.metadata_classT3 = classify_result;
+        ig_md.classification.metadata_classT3 = classify_result;
     }
 
 
@@ -756,13 +772,13 @@ control SwitchIngress(
     //T4
 
     action classify_T4_IPG(bit<8> classify_result){
-        ig_md.metadata_classT4 = classify_result;
+        ig_md.classification.metadata_classT4 = classify_result;
     }
     action classify_T4_IFG(bit<8> classify_result){
-        ig_md.metadata_classT4 = classify_result;
+        ig_md.classification.metadata_classT4 = classify_result;
     }
     action classify_T4_FS(bit<8> classify_result){
-        ig_md.metadata_classT4 = classify_result;
+        ig_md.classification.metadata_classT4 = classify_result;
     }
 
     
@@ -804,11 +820,11 @@ control SwitchIngress(
 
     //T5
     action classify_T5_FS(bit<8> classify_result){
-        ig_md.metadata_classT5 = classify_result;
+        ig_md.classification.metadata_classT5 = classify_result;
     }
 
     action classify_T5_IPG(bit<8> classify_result){
-        ig_md.metadata_classT5 = classify_result;
+        ig_md.classification.metadata_classT5 = classify_result;
     }
 
     table table_T5_FS{
@@ -836,15 +852,23 @@ control SwitchIngress(
 
     //majority
     action final_classification(bit<8> majority){
-        ig_md.metadata_final_classification = majority;
+        //ig_md.metadata_final_classification = (bit<8>) majority;
+        ig_md.classification.metadata_final_classification = (bit<8>) majority;
     }
     table table_majority{
         key = {
-            ig_md.metadata_classT1: exact;
-            ig_md.metadata_classT2: exact;
-            ig_md.metadata_classT3: exact;
-            ig_md.metadata_classT4: exact;
-            ig_md.metadata_classT5: exact;
+            //ig_md.metadata_classT1: exact;
+            //ig_md.metadata_classT2: exact;
+            //ig_md.metadata_classT3: exact;
+            //ig_md.metadata_classT4: exact;
+            //ig_md.metadata_classT5: exact;
+            
+            ig_md.classification.metadata_classT1: exact;
+            ig_md.classification.metadata_classT2: exact;
+            ig_md.classification.metadata_classT3: exact;
+            ig_md.classification.metadata_classT4: exact;
+            ig_md.classification.metadata_classT5: exact;
+            
         }
         actions = {
             final_classification();
@@ -969,37 +993,37 @@ control SwitchIngress(
 
         //T1
         table_T1_FS.apply();
-        if(ig_md.metadata_classT1 == 0){
+        if(ig_md.classification.metadata_classT1 == 0){
             table_T1_IPG.apply();
         }
 
         //T2
         table_T2_IFG.apply();
-        if(ig_md.metadata_classT2 == 0){
+        if(ig_md.classification.metadata_classT2 == 0){
             table_T2_IPG.apply();
         }
 
         //T3
         table_T3_FS.apply();
-        if(ig_md.metadata_classT3 == 0){
+        if(ig_md.classification.metadata_classT3 == 0){
             table_T3_IFG.apply();
         }
-        if(ig_md.metadata_classT3 == 0){
+        if(ig_md.classification.metadata_classT3 == 0){
             table_T3_IPG.apply();
         }
 
         //T4
         table_T4_IFG.apply();
-        if(ig_md.metadata_classT4 == 5){
+        if(ig_md.classification.metadata_classT4 == 5){
             table_T4_IPG.apply();
         }
-        else if(ig_md.metadata_classT4 == 6){
+        else if(ig_md.classification.metadata_classT4 == 6){
             table_T4_FS.apply();
         }
 
         //T5
         table_T5_FS.apply();
-        if(ig_md.metadata_classT5 == 0){
+        if(ig_md.classification.metadata_classT5 == 0){
             table_T5_IPG.apply();
         }
 
@@ -1132,24 +1156,24 @@ control SwitchIngress(
         
 
         //if (hdr.ipv4.l4s == 1){
-
-        // if(hdr.ipv4.ecn == 2){
-        //     ig_tm_md.qid = 2;
-        // }
-        // else if(hdr.ipv4.ecn == 1 ){ // IMPORTANT: ECT(1) = 01 (valor 1), ECT(0) = 10 (valor 2)
-        //     //* L4S queue *//
-        //     ig_tm_md.qid=1; //INT GOING ALSO
+        // Alireza ****
+        //if(hdr.ipv4.ecn == 2){
+             //ig_tm_md.qid = 2;
+         //}
+         //else if(hdr.ipv4.ecn == 1 ){ // IMPORTANT: ECT(1) = 01 (valor 1), ECT(0) = 10 (valor 2)
+            //* L4S queue *//
+           // ig_tm_md.qid=1; //INT GOING ALSO
         
-        // }
-        // else{
-        //     //* Classic queue *//
-        //     ig_tm_md.qid=0; 
+         //}
+         //else{
+            //* Classic queue *//
+           // ig_tm_md.qid=0; 
 
-        //     //drop
-        //     //drop_regular_pkts();
+            //drop
+             //drop_regular_pkts();
         
-        // }
-
+         //}
+            // Alireza ****
         //* Read the output port state from the register*//
         // flag = read_congest_port.execute((bit<16>)ig_tm_md.ucast_egress_port);
 
@@ -1184,6 +1208,7 @@ control SwitchIngress(
         if(marking_decision == 1){
             hdr.ipv4.ecn = 1;
             hdr.ipv4.dscp = 46;
+            
         }
         else if(marking_decision == 2){
             hdr.ipv4.ecn = 1;
@@ -1192,16 +1217,19 @@ control SwitchIngress(
         else if(marking_decision == 3){
             hdr.ipv4.dscp = 50;
         }
-        // if(hdr.ipv4.ecn == 1){
-        //     //ig_tm_md.qid = 1;
-        // }
+
+        //ig_tm_md.qid = 0; 
+        //ig_tm_md.qid = 0; 
+         if(hdr.ipv4.ecn == 1){
+        ig_tm_md.qid = 1;
+                 }
 
         //** Insert ingress timestamp into bridge header to be used in the egress**//
         hdr.bridge.setValid();
         hdr.bridge.bridge_ingress_port = (bit<16>)ig_intr_md.ingress_port;
         hdr.bridge.ingress_global_tstamp = ig_intr_prsr_md.global_tstamp;
         hdr.bridge.bridge_qid = (bit<16>)ig_tm_md.qid; 
-
+        
         //ig_tm_md.ucast_egress_port = 100; //"""drop the original"
         //decisionMirror();
 
