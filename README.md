@@ -6,7 +6,22 @@
 ### **Note:**
 This paper has been submitted to the Netsoft 2025 Conference and is under review!
 
+## Repository Structure
+![image](https://github.com/user-attachments/assets/b9011137-c549-40b8-90b4-e31821da9f86)
 
+### [RF Model Preprocessing/Preparation](https://github.com/dcomp-leris/ARCG-DP-Deployment/edit/main/README.md#preprocessingprepration)
+### BMV1/P4Pi
+### [Tofino](https://github.com/dcomp-leris/ARCG-DP-Deployment/edit/main/README.md#1-connect-tofino--clone-p4-code)
+
+
+
+
+# Preprocessing/Prepration 
+## (1) Conver the RF.pkl Model to If-then-else rules
+      sudo python3 convertor.py RF.pkl > rules.txt
+      
+**Note:** Prunning/Simplified the Rules! and finally store it in 
+# Tofino
 ## (1) Connect Tofino & Clone P4 Code
       ssh [username]@[IP]    # Replace your username & Tofino IP
       pass: xxxx             # Tofino password
