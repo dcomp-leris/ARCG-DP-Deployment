@@ -1,0 +1,127 @@
+Classes:
+(Not classified = 0, AR=1, CG =2, Other = 3)
+============================================
+max (frame or packet) size= 65536 (16 bits)
+max time = 1048576 (20 bit)
+============================================
+Tree1 
+------------------------------------------- 
+FS Check:
+
+    If 0 ≤ FS ≤ 42:
+    → Class: Other
+    If 43 ≤ FS ≤ 1667:
+    → Class: CG
+    If FS ≥ 1668:
+    → Go to IPI Check
+
+IPI Check (when FS ≥ 1668):
+
+    If 0 ≤ IPI ≤ 1403:
+    → Class: AR
+    If IPI ≥ 1404:
+    → Class: CG
+    
+-------------------------------------------
+Tree2 
+------------------------------------------- 
+IFI Check:
+
+    If IFI ≤ 31502:
+    → Class: Other
+    (No need to check PS as this range always predicts Other.)
+
+If IFI ≥ 31503:
+
+    IPI Check:
+        If IPI ≤ 1403:
+        → Class: AR
+        If IPI > 1403:
+        → Class: CG        
+-------------------------------------------
+Tree3 
+------------------------------------------- 
+Step 1: Check FS
+
+    If FS ≤ 42:
+    → Class: Other
+    (This covers cases where FS is very low, regardless of IFI or IPI.)
+
+    If FS > 42:
+    → Go to Step 2
+
+Step 2: Check IFI
+
+    If IFI ≤ 57938:
+    → Class: CG
+    (When FS is high and IFI is not too high, the decision is CG.)
+
+    If IFI > 57938:
+    → Go to Step 3
+
+Step 3: Check IPI
+
+    If IPI ≤ 1403:
+    → Class: AR
+    If IPI > 1403:
+    → Class: CG
+-------------------------------------------
+ Tree4 
+-------------------------------------------
+Step 1: Check IFI
+
+    If IFI ≤ 57831:
+    → Go to Step 2a (FS=6)
+
+    If IFI ≥ 57832:
+    → Go to Step 2b  (IPI=5)
+
+Step 2a: (Low IFI Range)
+
+    Check FS:
+
+        If FS ≤ 44:
+        → Class: Other
+        (This follows the rule: (0≤ IFI ≤57831) & (0≤ FS ≤44))
+
+        If FS ≥ 45:
+        → Class: CG
+        (This follows the rule: (45 ≤ FS ≤ 65535))
+
+Step 2b: (High IFI Range)
+
+    Check IPI:
+
+        If IPI ≤ 1403:
+        → Class: AR
+        (This corresponds to: (57832≤ IFI ≤1048575) & (0 ≤ IPI ≤1403))
+
+        If IPI ≥ 218209:
+        → Class: Other
+        (This corresponds to: (57832≤ IFI ≤1048575) & (218209≤ IPI ≤1048575))
+
+        If IPI is between 1404 and 218208:
+        → Class: CG
+        (This covers the remaining cases where IFI is high and IPI isn’t extremely low or high)
+        
+-------------------------------------------
+Tree5 
+-------------------------------------------
+
+FS Check:
+
+    If FS ≤ 42:
+    → Class: Other
+    If FS > 42:
+    → Go to IPI check
+
+IPI Check (when FS > 42):
+
+    If IPI ≤ 1382:
+    → Class: AR
+    If IPI > 1382:
+    → Class: CG
+        
+
+
+

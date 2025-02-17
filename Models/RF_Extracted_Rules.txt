@@ -1,0 +1,41 @@
+
+Tree 1 rules:
+Rule: (FS <= 42.50) -> Predicted class: Other
+Rule: (FS > 42.50) & (FS <= 1667.50) & (FS <= 1267.50) -> Predicted class: CG
+Rule: (FS > 42.50) & (FS <= 1667.50) & (FS > 1267.50) -> Predicted class: CG
+Rule: (FS > 42.50) & (FS > 1667.50) & (IPI <= 1403.50) -> Predicted class: AR
+Rule: (FS > 42.50) & (FS > 1667.50) & (IPI > 1403.50) -> Predicted class: CG
+
+Tree 2 rules:
+Rule: (IFI <= 31502.00) & (PS <= 55.50) -> Predicted class: Other
+Rule: (IFI <= 31502.00) & (PS > 55.50) & (IFI <= 13604.50) -> Predicted class: Other
+Rule: (IFI <= 31502.00) & (PS > 55.50) & (IFI > 13604.50) -> Predicted class: Other
+Rule: (IFI > 31502.00) & (IPI <= 1403.50) & (IPI <= 973.50) -> Predicted class: AR
+Rule: (IFI > 31502.00) & (IPI <= 1403.50) & (IPI > 973.50) -> Predicted class: AR
+Rule: (IFI > 31502.00) & (IPI > 1403.50) & (IFI <= 139620.50) -> Predicted class: CG
+Rule: (IFI > 31502.00) & (IPI > 1403.50) & (IFI > 139620.50) -> Predicted class: CG
+
+Tree 3 rules:
+Rule: (IFI <= 57938.50) & (FS <= 44.00) -> Predicted class: Other
+Rule: (IFI <= 57938.50) & (FS > 44.00) & (IFI <= 20925.00) -> Predicted class: CG
+Rule: (IFI <= 57938.50) & (FS > 44.00) & (IFI > 20925.00) -> Predicted class: CG
+Rule: (IFI > 57938.50) & (IPI <= 1403.50) & (IPI <= 969.50) -> Predicted class: AR
+Rule: (IFI > 57938.50) & (IPI <= 1403.50) & (IPI > 969.50) -> Predicted class: AR
+Rule: (IFI > 57938.50) & (IPI > 1403.50) & (FS <= 42.50) -> Predicted class: Other
+Rule: (IFI > 57938.50) & (IPI > 1403.50) & (FS > 42.50) -> Predicted class: CG
+
+Tree 4 rules:
+Rule: (IFI <= 57831.50) & (FS <= 44.00) -> Predicted class: Other
+Rule: (IFI <= 57831.50) & (FS > 44.00) & (PS <= 39.00) -> Predicted class: CG
+Rule: (IFI <= 57831.50) & (FS > 44.00) & (PS > 39.00) -> Predicted class: CG
+Rule: (IFI > 57831.50) & (IPI <= 1403.00) & (IPI <= 1062.50) -> Predicted class: AR
+Rule: (IFI > 57831.50) & (IPI <= 1403.00) & (IPI > 1062.50) -> Predicted class: AR
+Rule: (IFI > 57831.50) & (IPI > 1403.00) & (IPI <= 218209.50) -> Predicted class: CG
+Rule: (IFI > 57831.50) & (IPI > 1403.00) & (IPI > 218209.50) -> Predicted class: Other
+
+Tree 5 rules:
+Rule: (FS <= 42.50) -> Predicted class: Other
+Rule: (FS > 42.50) & (IPI <= 1382.00) & (FS <= 1942.50) -> Predicted class: AR
+Rule: (FS > 42.50) & (IPI <= 1382.00) & (FS > 1942.50) -> Predicted class: AR
+Rule: (FS > 42.50) & (IPI > 1382.00) & (IPI <= 1489.50) -> Predicted class: CG
+Rule: (FS > 42.50) & (IPI > 1382.00) & (IPI > 1489.50) -> Predicted class: CG

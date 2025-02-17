@@ -1,0 +1,45 @@
+Tree 1:
+Rule: (FS <= 44.5) -> Predicted class: Other
+Rule: (FS > 44.5) & (FS <= 1667.5) & (FS <= 1301.5) -> Predicted class: CG
+Rule: (FS > 44.5) & (FS <= 1667.5) & (FS > 1301.5) -> Predicted class: CG
+Rule: (FS > 44.5) & (FS > 1667.5) & (IPI <= 1426.5) -> Predicted class: AR
+Rule: (FS > 44.5) & (FS > 1667.5) & (IPI > 1426.5) -> Predicted class: CG
+
+
+Tree 2:
+Rule: (IFI <= 32847.0) & (PS <= 56.5) -> Predicted class: Other
+Rule: (IFI <= 32847.0) & (PS > 56.5) & (IFI <= 7350.0) -> Predicted class: Other
+Rule: (IFI <= 32847.0) & (PS > 56.5) & (IFI > 7350.0) -> Predicted class: Other
+Rule: (IFI > 32847.0) & (IPI <= 1426.5) & (IPI <= 1064.5) -> Predicted class: AR
+Rule: (IFI > 32847.0) & (IPI <= 1426.5) & (IPI > 1064.5) -> Predicted class: AR
+Rule: (IFI > 32847.0) & (IPI > 1426.5) & (IFI <= 261786.0) -> Predicted class: CG
+Rule: (IFI > 32847.0) & (IPI > 1426.5) & (IFI > 261786.0) -> Predicted class: CG
+
+
+Tree 3:
+Rule: (IFI <= 59131.0) & (FS <= 85.5) -> Predicted class: Other
+Rule: (IFI <= 59131.0) & (FS > 85.5) -> Predicted class: CG
+Rule: (IFI > 59131.0) & (IPI <= 1466.5) & (IPI <= 1159.5) -> Predicted class: AR
+Rule: (IFI > 59131.0) & (IPI <= 1466.5) & (IPI > 1159.5) -> Predicted class: AR
+Rule: (IFI > 59131.0) & (IPI > 1466.5) & (FS <= 54.0) -> Predicted class: Other
+Rule: (IFI > 59131.0) & (IPI > 1466.5) & (FS > 54.0) -> Predicted class: CG
+
+
+Tree 4:
+Rule: (IFI <= 56766.5) & (FS <= 62.0) & (PS <= 3.5) -> Predicted class: Other
+Rule: (IFI <= 56766.5) & (FS <= 62.0) & (PS > 3.5) -> Predicted class: Other
+Rule: (IFI <= 56766.5) & (FS > 62.0) -> Predicted class: CG
+Rule: (IFI > 56766.5) & (IPI <= 1426.5) & (IPI <= 1106.5) -> Predicted class: AR
+Rule: (IFI > 56766.5) & (IPI <= 1426.5) & (IPI > 1106.5) -> Predicted class: AR
+Rule: (IFI > 56766.5) & (IPI > 1426.5) & (IPI <= 230610.0) -> Predicted class: CG
+Rule: (IFI > 56766.5) & (IPI > 1426.5) & (IPI > 230610.0) -> Predicted class: Other
+
+
+Tree 5:
+Rule: (FS <= 48.0) -> Predicted class: Other
+Rule: (FS > 48.0) & (IPI <= 1411.5) & (FS <= 2540.5) -> Predicted class: AR
+Rule: (FS > 48.0) & (IPI <= 1411.5) & (FS > 2540.5) -> Predicted class: AR
+Rule: (FS > 48.0) & (IPI > 1411.5) & (IPI <= 1809.0) -> Predicted class: CG
+Rule: (FS > 48.0) & (IPI > 1411.5) & (IPI > 1809.0) -> Predicted class: CG
+
+
