@@ -21,6 +21,8 @@ This paper has been submitted to the Netsoft 2025 Conference and is under review
       sudo python3 convertor.py RF.pkl > RF_Extracted_Rules.txt
       
 **Note:** Prunning/Simplified the 'RF_Extracted_Rules.txt' Rules! and finally store it in `Final_Pruned_RF_Model.txt'.
+
+
 # Tofino
 ## (1) Connect Tofino & Clone P4 Code
       ssh [username]@[IP]    # Replace your username & Tofino IP
