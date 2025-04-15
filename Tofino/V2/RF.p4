@@ -1218,10 +1218,9 @@ control SwitchIngress(
             hdr.ipv4.dscp = 50;
         }
 
-        //ig_tm_md.qid = 0; 
-        //ig_tm_md.qid = 0; 
+        // Check ECN for ECT(1)
          if(hdr.ipv4.ecn == 1){
-        ig_tm_md.qid = 1;
+        ig_tm_md.qid = 1; // Set L4S Queue 
                  }
 
         //** Insert ingress timestamp into bridge header to be used in the egress**//

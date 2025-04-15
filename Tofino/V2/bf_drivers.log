@@ -14104,3 +14104,20 @@
 2025-02-17 11:39:47.545239 DEBUG BF_PM pm_port_link_status_chg_cb:4836 PM: Dev 0 : front port 1/1 (137) : UP
 2025-02-17 11:39:47.545295 DEBUG BF_PLTFM PM_INTF_FSM:  1/1 : PM_INTF_FSM_LINK_DOWN --> PM_INTF_FSM_LINK_UP         
 2025-02-17 11:39:47.545479 INFO  BF_TM Enabling QAC rx during port-enable for dev 0, dev_port 137
+2025-02-17 12:15:01.214126 INFO  BF_PM bf_pm_port_add_with_lanes:5932 0:1/0:2(speed):0(fec):1(n_lanes)
+2025-02-17 12:15:01.214204 DEBUG BF_PM bf_pm_port_add_with_lanes:5956 port already exists for dev : 0 : front port : 1/0 
+2025-02-17 12:15:01.214240 INFO  BF_PM bf_pm_port_autoneg_set:6627 0:1/0:2(an_policy)
+2025-02-17 12:15:01.214269 INFO  BF_PM bf_pm_port_enable:6201 0:1/0
+2025-02-17 12:15:01.214767 INFO  BF_PM bf_pm_port_add_with_lanes:5932 0:1/1:2(speed):0(fec):1(n_lanes)
+2025-02-17 12:15:01.214807 DEBUG BF_PM bf_pm_port_add_with_lanes:5956 port already exists for dev : 0 : front port : 1/1 
+2025-02-17 12:15:01.214827 INFO  BF_PM bf_pm_port_autoneg_set:6627 0:1/1:2(an_policy)
+2025-02-17 12:15:01.214854 INFO  BF_PM bf_pm_port_enable:6201 0:1/1
+2025-02-17 12:15:01.215308 INFO  BF_PM bf_pm_port_add_with_lanes:5932 0:23/0:64(speed):0(fec):4(n_lanes)
+2025-02-17 12:15:01.215344 DEBUG BF_PM bf_pm_port_add_with_lanes:5956 port already exists for dev : 0 : front port : 23/0 
+2025-02-17 12:15:01.215401 INFO  BF_PM bf_pm_port_enable:6201 0:23/0
+2025-02-17 12:15:01.215832 INFO  BF_PM bf_pm_port_add_with_lanes:5932 0:24/0:64(speed):0(fec):4(n_lanes)
+2025-02-17 12:15:01.215866 DEBUG BF_PM bf_pm_port_add_with_lanes:5956 port already exists for dev : 0 : front port : 24/0 
+2025-02-17 12:15:01.215905 INFO  BF_PM bf_pm_port_enable:6201 0:24/0
+2025-02-17 12:15:01.216283 INFO  BF_PM bf_pm_port_add_with_lanes:5932 0:2/0:2(speed):0(fec):1(n_lanes)
+2025-02-17 12:15:01.216317 DEBUG BF_PM bf_pm_port_add_with_lanes:5956 port already exists for dev : 0 : front port : 2/0 
+2025-02-17 12:15:01.216692 INFO  BF_PM bf_pm_port_loopback_mode_set:8701 0:2/0:1(loopback_mode)
