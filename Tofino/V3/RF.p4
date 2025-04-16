@@ -1,8 +1,9 @@
+// Authors: Mateus, Alireza
+// Date: 2025-04-15
+// Netsoft 2025 
+
 #include <core.p4>
 #include <t2na.p4>
-
-//THIS VERSION IS BASED ON THE /home/leris/p4code/alireza/iRED_modified/INT_version/L4S_Classic_CG/L4S_Classic_CG.p4
-// CHAGING THE EGRESS TO INGRESS PROCESSING
 
 /*** Types of variable ***/
 typedef bit<4> header_type_t;
@@ -65,7 +66,7 @@ const bit<2>  RTP_VERSION = 2;
     header_info_t header_info
 
 #define MAX_HOPS 10
-#define NUMBER_OF_QUEUES 3 //CLASSIC L4S AND CG
+#define NUMBER_OF_QUEUES 2 //CLASSIC L4S AND CG
 
 /*** Headers ***/
 header ethernet_h {
@@ -241,15 +242,12 @@ struct parser_metadata_t {
 struct metadata_t{
     
     classification_h classification; // Alireza 
-
     bridge_h    bridge;
     mirror_h    mirror;
     MirrorId_t  mirror_session;
     PortId_t    egress_port;
     header_type_t header_type;
     header_info_t header_info;
-    //bit<48> egress_global_tstamp;
-    //bit<32> queue_delay;
     ingress_metadata_t   ingress_metadata;
     parser_metadata_t   parser_metadata;
     //bit<8> qid; // Alireza
@@ -270,16 +268,6 @@ struct metadata_t{
     bit<8> metadata_flowID; //maybe change to 32 if problem
     bit<8> metadata_rtp_marker;
     bit<8> metadata_has_rtp;
-    // bit<8> metadata_counter1;
-    // bit<8> metadata_counter2;
-    // bit<8> metadata_counter3;
-    
-    //bit<8> metadata_classT1;
-    //bit<8> metadata_classT2;
-    //bit<8> metadata_classT3;
-    //bit<8> metadata_classT4;
-    //bit<8> metadata_classT5;
-    //bit<8> metadata_final_classification;
     bit<32> metadata_rtp_timestamp; //Alireza added
     bit<32> metadata_host_ifg; // Alireza added
     bit<20> metadata_ipg_20lsb;
@@ -546,29 +534,7 @@ control SwitchIngress(
     }
 
     action find_flowID_ipv4_tcp(){
-        // bit<1> base = 0;
-        // bit<16> max = 0xffff;
-        // bit<16> hash_result;
-        // //bit<48> IP_Port = hdr.ipv4.dstAddr ++ hdr.udp.dstPort;
-        // bit<48> IP_dst_add = hdr.ipv4.dstAddr;
-        // bit<48> UDP_dst_port = hdr.udp.dstPort;
-        // bit<8> IP_Proto = hdr.ipv4.proto;
-        // hash(
-        //      hash_result,
-        //      HashAlgorithm.crc8,
-        //      base,
-        //      {
-        //         IP_Port, UDP_dst_port, IP_Proto
-        //      },
-        //      max
-        //      );
-
-        //bit<48> concatenated_hash_input = (bit<48>) (hdr.ipv4.dst_addr ++ hdr.udp.dstPort);
-
         ig_md.metadata_flowID = decider_hash_tcp.get({hdr.ipv4.dst_addr, hdr.tcp.dstPort, hdr.ipv4.protocol});
-        //ig_md.metadata_flowID = decider_hash.get({concatenated_hash_input});
-        // bit<8> temp_index = 0;
-        // store_flow_id_reg.execute(temp_index);
     }
 
 
@@ -874,12 +840,6 @@ control SwitchIngress(
     }
     table table_majority{
         key = {
-            //ig_md.metadata_classT1: exact;
-            //ig_md.metadata_classT2: exact;
-            //ig_md.metadata_classT3: exact;
-            //ig_md.metadata_classT4: exact;
-            //ig_md.metadata_classT5: exact;
-            
             ig_md.classification.metadata_classT1: exact;
             ig_md.classification.metadata_classT2: exact;
             ig_md.classification.metadata_classT3: exact;
@@ -893,47 +853,14 @@ control SwitchIngress(
         }
         size = 1024;
         default_action = NoAction();
-    }
-    
-
-    
-    
-
-
-   
+    }  
     
 
     apply {
         
     // //* Check for cloned pkts *//
     if (ig_intr_md.ingress_port == MIRROR_PORT){
-        //if(hdr.mirror.frame_size != 0){
-            /////////////////////lpf_input_frame_size = hdr.ipv4.total_len;
-            //lpf_input_frame_size = hdr.mirror.frame_size;
-            //////////////////////////lpf_output_frame_size = lpf_frame_size.execute(lpf_input_frame_size,0);
-            //store_frame_size_ewma_reg.execute(hdr.mirror.flowid);
-        //}
-        //* Cloned pkts *//
-        //* Turn ON congestion flag. Write '1' in the register index port *//
-        // write_congest_port.execute((bit<16>)hdr.mirror.egress_port);
-        
-        // //* Compute recirculation time from egress to ingress *//
         ig_tm_md.ucast_egress_port = 100; //drop????
-        //recirculationTime = (bit<32>)ig_intr_prsr_md.global_tstamp - (bit<32>)hdr.mirror.egress_global_tstamp;
-        // recirculationTime = (bit<32>)hdr.mirror.egress_global_tstamp;
-        // recirc_action.execute(0);
-
-        //ig_md.metadata_flowID = hdr.mirror.flowid;
-
-        //if (hdr.ipv4.isValid() && hdr.ipv4.protocol == PROTO_UDP) {
-        // if(hdr.ipv4.protocol == PROTO_UDP){
-        //     find_flowID_ipv4_udp();
-        // }
-        // else if(hdr.ipv4.protocol == PROTO_TCP){
-        //     find_flowID_ipv4_tcp();
-        // }
-
-
         ig_md.metadata_flowID = hdr.mirror.flowid;
         bit<8> temp_index = 0;
         store_flow_id_reg.execute(temp_index);
@@ -949,9 +876,7 @@ control SwitchIngress(
             count_counter_packets_frame.execute(ig_md.metadata_flowID);
         }
 
-        // //* Drop cloned pkt *//
-        // drop_cloned_pkt.count((bit<32>)hdr.mirror.egress_port); //maybe flowid?  (bit<32>)hdr.mirror.flowid
-        // drop_cloned_pkts();
+
 
 
         //packet size
@@ -1073,24 +998,9 @@ control SwitchIngress(
         }
         // 1/0 -> 1/1
         else if (ig_intr_md.ingress_port == 136) {
-            // if(hdr.nodeCount.isValid()){
-            //     if(hdr.nodeCount.count < 2){
-            //         //loopbackport
-            //         ig_tm_md.ucast_egress_port = recirc_port;
-            //     }
-            //     else{
-            //         //sendback
-            //         ig_tm_md.ucast_egress_port = 136;
-            //     }
-            // }
-            // else{
-                //ig_tm_md.ucast_egress_port = recirc_port;
-                //ig_tm_md.ucast_egress_port = 137;
-            //}
             if(hdr.nodeCount.isValid()){
                 if(hdr.nodeCount.count == 0){
-                    //recirculate
-                    //ig_tm_md.ucast_egress_port = recirc_port;
+
                     ig_tm_md.ucast_egress_port[8:7] = ig_intr_md.ingress_port[8:7];
                     ig_tm_md.ucast_egress_port[6:0] = recirc_port[6:0]; //n sei pq pega os 7 bits
                 }
@@ -1166,7 +1076,7 @@ control SwitchIngress(
         hdr.bridge.bridge_qid = (bit<16>)ig_tm_md.qid; 
         
         //ig_tm_md.ucast_egress_port = 100; //"""drop the original"
-        //decisionMirror();
+
 
         
         //hdr.cute_new_header.setInvalid();
@@ -1373,8 +1283,41 @@ control Egress(
         Register<bit<32>, _>(N_PORTS) timestamp_ifg_reg;
         Register<bit<16>, _>(N_PORTS) frame_size_reg;
         Register<bit<32>, _>(N_PORTS) timestamp_ipg_reg;
+        Register<bit<8>, _>(NUMBER_OF_QUEUES+NUMBER_OF_QUEUES) frame_counter_threshhold; // for mirroring control
+        Register<bit<8>, _>(N_PORTS) frame_counter; // for mirroring control
 
+        Register<bit<8>, _>(NUMBER_OF_QUEUES+NUMBER_OF_QUEUES) packet_counter_threshhold; // for mirroring control
+        Register<bit<8>, _>(N_PORTS) packet_counter_flowbased; // for mirroring control
 
+        //Packet counter
+          RegisterAction<bit<8>, bit<8>, bit<8>>(frame_counter) increase_packet_counter_flowbased = { // for Frame counting threshold
+            void apply(inout bit<8> value, out bit<8> result) {
+                result = value + 1;
+                value =  value + 1; 
+            }
+        };     
+
+        RegisterAction<bit<8>, bit<8>, bit<8>>(frame_counter_threshhold) read_packet_counter_threshhold = { // for Frame counting threshold
+            void apply(inout bit<8> value, out bit<8> result) {
+                result = value;
+                value =  value; //eg_md.metadata_ipg_temp;
+            }
+        };           
+        //frame counter
+         RegisterAction<bit<8>, bit<8>, bit<8>>(frame_counter) increase_frame_counter = { // for Frame counting threshold
+            void apply(inout bit<8> value, out bit<8> result) {
+                result = value + 1;
+                value =  value + 1; 
+            }
+        };     
+
+        RegisterAction<bit<8>, bit<8>, bit<8>>(frame_counter_threshhold) read_frame_counter_threshhold = { // for Frame counting threshold
+            void apply(inout bit<8> value, out bit<8> result) {
+                result = value;
+                value =  value; //eg_md.metadata_ipg_temp;
+            }
+        };        
+       //frame counter
         RegisterAction<bit<32>, bit<8>, bit<32>>(timestamp_ipg_reg) update_timestamp_ipg_reg = {
             void apply(inout bit<32> value, out bit<32> result) {
                 result = value;
@@ -1491,54 +1434,9 @@ control Egress(
             }
         };
         
-
-        // RegisterAction<enq_qdepth_v, bit<16>, enq_qdepth_v>(enq_qdepth_reg) read_enq_qdepth_reg_RegisterAction = {
-        //     void apply(inout enq_qdepth_v value, out enq_qdepth_v result) {
-        //         result = value;
-        //         value = 0;
-        //     }
-        // };
-        
-        
-        // RegisterAction<enq_qdepth_v, bit<16>, enq_qdepth_v>(enq_qdepth_reg) write_enq_qdepth_reg_RegisterAction = {
-        //     void apply(inout enq_qdepth_v value, out enq_qdepth_v result) {
-
-        //         bit<32> avg_temp;
-              
-        //         avg_temp =  enq_qdepth + value;
-               
-        //         // update register        
-        //         value = avg_temp;
-        //         result = avg_temp;
-        //     }
-        // };
-
-        
-
-        // RegisterAction<bit<16>, bit<16>, bit<16>>(qdelay_classic) qdelay_classic_action = {
-        //     void apply(inout bit<16> value, out bit<16> result) {
-        //         //* Compute Exponentially-Weighted Mean Average (EWMA) of queue delay *//
-        //         // EWMA = alpha*qdelay + (1 - alpha)*previousEWMA
-        //         // We use alpha = 0.5 such that multiplications can be replaced by bit shifts
-        //         bit<16> avg_temp;
-                
-        //         avg_temp =  queue_delay + value;
-               
-        //         // update register        
-        //         value = avg_temp;
-        //         result = avg_temp;
-        //     }
-
-        // };
-
-        
         RegisterAction<bit<32>, bit<16>, bit<32>>(qdelay_l4s) qdelay_l4s_action = {
             void apply(inout bit<32> value, out bit<32> result) {
                 
-                    
-                //Compute Exponentially-Weighted Mean Average (EWMA) of queue delay 
-                // EWMA = alpha*qdelay + (1 - alpha)*previousEWMA
-                // We use alpha = 0.5 such that multiplications can be replaced by bit shifts
                 bit<32> avg_temp;
               
                 avg_temp =  (queue_delay + value);
@@ -1581,22 +1479,6 @@ control Egress(
             }
         };
         
-        // RegisterAction<bit<16>, bit<16>, bool>(dropProbability) getProb_classic = {
-        //     void apply(inout bit<16> value, out bool result){
-        //         if (rand_classic < value){
-
-        //             value = value - 1;
-        //             result = true;
-               // temp_index
-        //         }else{
-
-        //             value = value + 1;
-        //             result = false;
-                
-        //         }
-        //     }
-        // };
-
         Register<bit<8>, _> (1) flow_id_reg;
 
         RegisterAction<bit<8>, bit<8>, bit<8>>(flow_id_reg) store_flow_id_reg = {
@@ -1639,29 +1521,7 @@ control Egress(
     }
 
     action find_flowID_ipv4_tcp(){
-        // bit<1> base = 0;
-        // bit<16> max = 0xffff;
-        // bit<16> hash_result;
-        // //bit<48> IP_Port = hdr.ipv4.dstAddr ++ hdr.udp.dstPort;
-        // bit<48> IP_dst_add = hdr.ipv4.dstAddr;
-        // bit<48> UDP_dst_port = hdr.udp.dstPort;
-        // bit<8> IP_Proto = hdr.ipv4.proto;
-        // hash(
-        //      hash_result,
-        //      HashAlgorithm.crc8,
-        //      base,
-        //      {
-        //         IP_Port, UDP_dst_port, IP_Proto
-        //      },
-        //      max
-        //      );
-
-        //bit<48> concatenated_hash_input = (bit<48>) (hdr.ipv4.dst_addr ++ hdr.udp.dstPort);
-
         eg_md.metadata_flowID = decider_hash_tcp.get({hdr.ipv4.dst_addr, hdr.tcp.dstPort, hdr.ipv4.protocol});
-        //ig_md.metadata_flowID = decider_hash.get({concatenated_hash_input});
-        // bit<8> temp_index = 0;
-        // store_flow_id_reg.execute(temp_index);
     }
         
         
@@ -1699,60 +1559,13 @@ control Egress(
 
         };    
 
-        // action define_index_for_registers_action(bit<16> index){
-        //     eg_md.metadata_index = index;
-        //     //bit<16> nada = store_index_reg.execute(0); //n da fala que gera muitos stages
-        // }
-
         action _drop(){
             eg_intr_dprs_md.drop_ctl = 1;
         }
 
 
-
-        // table define_index_for_registers_table{
-        //     key = {
-        //         hdr.bridge.bridge_qid: exact;
-        //         eg_intr_md.egress_port: exact;
-        //     }
-        //     actions = {
-        //         define_index_for_registers_action;
-        //         _drop;
-        //         NoAction;
-        //     }
-        //     size = 1024;
-        // }
-
-
-
-        //TESTE
-        // action add_swtrace(){
-        //     hdr.nodeCount.count = hdr.nodeCount.count + 1;
-        //     hdr.INT.push_front(1);
-        //     hdr.INT[0].setValid();
-        //     hdr.INT[0].ingress_mac_tstamp = eg_md.metadata_ingress_mac_tstamp;
-        //     hdr.INT[0].ingress_global_tstamp = eg_md.metadata_ingress_global_tstamp;
-        //     hdr.INT[0].egress_global_tstamp = eg_md.metadata_egress_global_tstamp;
-        //     hdr.INT[0].queue_delay = eg_md.metadata_egress_queue_delay;
-        //     hdr.ipv4.total_len = hdr.ipv4.total_len + 16; //32 + 32 + 32 + 32 = 16
-        // }
-
-
         action add_swtrace(){
-            // enq_qdepth_v enq_qdepth_avg;
-            // deq_timedelta_v deq_timedelta_avg;
-            // deq_qdepth_v deq_qdepth_avg;
-            // deq_timedelta_v processing_time_avg;
-
-            
-
-            // enq_qdepth_reg.read(enq_qdepth_avg, (bit<32>)reg_index);
-            //enq_qdepth_avg = read_enq_qdepth_reg_RegisterAction.execute(eg_md.metadata_index); //o read zera
-
-            // deq_timedelta_reg.read(deq_timedelta_avg, (bit<32>)reg_index);
-            // deq_qdepth_reg.read(deq_qdepth_avg, (bit<32>)reg_index);
-            // processing_time_reg.read(processing_time_avg, (bit<32>)reg_index);
-            
+           
             hdr.nodeCount.count = hdr.nodeCount.count + 1;
             hdr.INT.push_front(1);
             hdr.INT[0].setValid();
@@ -1774,141 +1587,12 @@ control Egress(
             hdr.INT[0].number_of_packets_for_average = eg_md.metadata_totalPkts;
 
             hdr.ipv4.total_len = hdr.ipv4.total_len + 37;
-
-            // enq_qdepth_avg = 0;
-            // deq_timedelta_avg = 0;
-            // deq_qdepth_avg = 0;
-            // processing_time_avg = 0;
-
-            // enq_qdepth_reg.write((bit<32>)reg_index, enq_qdepth_avg);
-            // deq_timedelta_reg.write((bit<32>)reg_index, deq_timedelta_avg);
-            // deq_qdepth_reg.write((bit<32>)reg_index, deq_qdepth_avg);
-            // processing_time_reg.write((bit<32>)reg_index, processing_time_avg);
         }
        
     apply {
-        //* Only regular pkts *//a
-        // if (eg_intr_md.egress_port != recirc_port){   
-        
-        //egress_intrinsic_metadata_t   
-        //loopbackport
-        //hdr.bridge.bridge_ingress_port
-       //hdr.bridge.bridge_qid
-        // if (eg_intr_md.egress_port == 136){ //136 = supermario/superppeach
-        //     //QueueId_t = 7bits IN TOFINO2
-        //     //hdr.bridge.bridge_qid
-        //     eg_md.metadata_index = (bit<16>)eg_intr_md.egress_qid ; 
-        // } else if(eg_intr_md.egress_port == 137) { //superluigi = 137
-        //     eg_md.metadata_index = (bit<16>)eg_intr_md.egress_qid + NUMBER_OF_QUEUES;
-        // }
-
-
-        //OPERACAO MT COMPLEXA DE INDEX
-        // bit<16> temp_porta;
-        // if(eg_intr_md.egress_port == 136){
-        //     temp_porta = 0;
-        // }
-        // else{
-        //     temp_porta = 1;
-        // }
-        // bit<16> temp_qid = hdr.bridge.bridge_qid << 1;
-        // eg_md.metadata_index = temp_qid + temp_porta;
-
-
-
-        // if(hdr.bridge.bridge_qid == 0){
-        //     if(hdr.bridge.bridge_ingress_port == 137){ //VEIO do superluigi (a saida eh 136)
-        //         eg_md.metadata_index = 0;
-        //     }
-        //     else{ //VEIO do supermario ou loopback (a saida eh 137 ou 136 na recirculacao)
-        //         if(hdr.nodeCount.isValid()){ 
-        //             //depende se vem do 136 ou da looback
-        //             if(hdr.bridge.bridge_ingress_port == 136){ //se vem da 136, vai em relacao a outra porta
-        //                 eg_md.metadata_index = 1;
-        //             }
-        //             else{
-        //                 //porta looback, vai ler agoa na volta a 136
-        //                 eg_md.metadata_index = 0;
-        //             }
-                    
-        //         }
-        //         else{
-        //             //vindo do 136 indo pro 137
-        //             eg_md.metadata_index = 1;
-        //         }
-        //     }
-        // }
-        // else if(hdr.bridge.bridge_qid == 1){
-        //     if(hdr.bridge.bridge_ingress_port == 137){ //VEIO do superluigi (a saida eh 136)
-        //         eg_md.metadata_index = 2;
-        //     }
-        //     else{ //VEIO do supermario ou loopback (a saida eh 137 ou 136 na recirculacao)
-        //         if(hdr.nodeCount.isValid()){ 
-        //             //depende se vem do 136 ou da looback
-        //             if(hdr.bridge.bridge_ingress_port == 136){ //se vem da 136, vai em relacao a outra porta
-        //                 eg_md.metadata_index = 3;
-        //             }
-        //             else{
-        //                 //porta looback, vai ler agoa na volta a 136
-        //                 eg_md.metadata_index = 2;
-        //             }
-                    
-        //         }
-        //         else{
-        //             //vindo do 136 indo pro 137
-        //             eg_md.metadata_index = 3;
-        //         }
-        //     }
-        // }
-
-
-
-
-        // if(hdr.bridge.bridge_qid == 0){
-        //     if(eg_intr_md.egress_port == 136){ 
-        //         //tem 2 casos: com int e sem int
-        //         // if(nodeCount.isValid()){
-        //         //     eg_md.metadata_index = 0x00;
-        //         // }
-        //         eg_md.metadata_index = 0x00;
-        //     }
-        //     else if(eg_intr_md.egress_port == 137){
-        //         eg_md.metadata_index = 0x01;
-        //     }
-        //     else{ //loopbackport (com int)
-        //         eg_md.metadata_index = 0x01;
-        //     }
-        // }
-        // else if(hdr.bridge.bridge_qid == 1){
-        //     if(eg_intr_md.egress_port == 136){ 
-        //         //tem 2 casos: com int e sem int
-        //         // if(nodeCount.isValid()){
-        //         //     eg_md.metadata_index = 0x02;
-        //         // }
-        //         eg_md.metadata_index = 0x02;
-        //     }
-        //     else if(eg_intr_md.egress_port == 137){
-        //         eg_md.metadata_index = 0x03;
-        //     }
-        //     else{//loopbackport com int
-        //         eg_md.metadata_index = 0x03;
-        //     }
-        // }
-
-        //using a table to define the index
-        //N DA PRA USAR ISSO AQUI POR CAUSA DO LOOPBACK PORT QUE EU NAO SEI
-        //define_index_for_registers_table.apply();
-
-        
-
-
-        
+           
         if(hdr.bridge.bridge_qid == 0){
             if(eg_intr_md.egress_port == 136){ 
-                //tem 2 casos: com int e sem int
-                // if(nodeCount.isValid()){
-                //     eg_md.metadata_index = 0x00;
-                // }
                 eg_md.metadata_index = 0x00;
             }
             else if(eg_intr_md.egress_port == 137){
@@ -1920,10 +1604,6 @@ control Egress(
         }
         else if(hdr.bridge.bridge_qid == 1){
             if(eg_intr_md.egress_port == 136){ 
-                //tem 2 casos: com int e sem int
-                // if(nodeCount.isValid()){
-                //     eg_md.metadata_index = 0x02;
-                // }
                 eg_md.metadata_index = 0x02;
             }
             else if(eg_intr_md.egress_port == 137){
@@ -1933,21 +1613,17 @@ control Egress(
                 eg_md.metadata_index = 0x03;
             }
         }
-        else if(hdr.bridge.bridge_qid == 2){
-            if(eg_intr_md.egress_port == 136){ 
-                //tem 2 casos: com int e sem int
-                // if(nodeCount.isValid()){
-                //     eg_md.metadata_index = 0x02;
-                // }
-                eg_md.metadata_index = 0x04;
-            }
-            else if(eg_intr_md.egress_port == 137){
-                eg_md.metadata_index = 0x05;
-            }
-            else{//loopbackport com int
-                eg_md.metadata_index = 0x05;
-            }
-        }
+        // else if(hdr.bridge.bridge_qid == 2){
+        //     if(eg_intr_md.egress_port == 136){ 
+        //         eg_md.metadata_index = 0x04;
+        //     }
+        //     else if(eg_intr_md.egress_port == 137){
+        //         eg_md.metadata_index = 0x05;
+        //     }
+        //     else{//loopbackport com int
+        //         eg_md.metadata_index = 0x05;
+        //     }
+        // }
 
 
         bit<16> nada = store_index_reg.execute(0); 
@@ -2099,7 +1775,7 @@ control Egress(
 
         }
         
-
+        // Flow ID starts
         if (hdr.ipv4.isValid() && hdr.ipv4.protocol == PROTO_UDP) {
             find_flowID_ipv4_udp();
         }
@@ -2107,8 +1783,8 @@ control Egress(
             find_flowID_ipv4_tcp();
         }
 
-
-
+        // increase the packets for each flow
+        bit<8> my_packet_counter = increase_packet_counter_flowbased.execute(eg_md.metadata_flowID);
         //IPG 
 
         eg_md.metadata_ipg_temp = (bit<32>) eg_intr_md_from_prsr.global_tstamp;
@@ -2116,13 +1792,18 @@ control Egress(
 
         eg_md.metadata_ipg = (bit<32>)eg_intr_md_from_prsr.global_tstamp - previous_tstamp_ipg;
         
-
+        // frm_thr = 3
         //IFG AND FRAME SIZE
         //SAVE TIMESTAMP OF THE EGRESS WHEN MARKER IS 1 AND JUST READSUBSTITUTE AGAIN WHEN A NEW MARKER
+        
+        bit<8> counter_frames;
         if(hdr.rtp.isValid() ){
             if(hdr.rtp.marker == 1){
                 if(hdr.rtp.version == RTP_VERSION){
                     eg_md.metadata_has_rtp = 1;
+
+          
+
                     // STORE THE TIMESTAM
                     eg_md.metadata_ifg_temp = (bit<32>)eg_intr_md_from_prsr.global_tstamp;
                     bit<32> previous_tstamp_ifg;
@@ -2138,6 +1819,9 @@ control Egress(
                     eg_md.metadata_host_ifg = hdr.rtp.timestamp - eg_md.metadata_rtp_timestamp;
 
                     update_host_ifg_reg.execute(eg_md.metadata_flowID);
+
+                    // Counting the Frame Number
+                    counter_frames = increase_frame_counter.execute(eg_md.metadata_flowID);
                     //Alireza end
                 }
                 else{
@@ -2167,8 +1851,15 @@ control Egress(
         eg_md.metadata_queue_delay_new = (bit<32>) eg_intr_md_from_prsr.global_tstamp - (bit<32>)hdr.bridge.ingress_global_tstamp;
 
         hdr.bridge.setInvalid(); //vai que
+        
+        bit<8> frame_threshhold_value = read_frame_counter_threshhold.execute(eg_md.metadata_index); // set thrshhold value
+        bit<8> packet_threshhold_value = read_packet_counter_threshhold.execute(eg_md.metadata_index); // set thrshhold value
+
         if(eg_intr_md.egress_port != MIRROR_PORT && eg_intr_md.egress_port != recirc_port){
-            decisionMirror();
+            
+            if (counter_frames < frame_threshhold_value ||  my_packet_counter < packet_threshhold_value){
+                decisionMirror(); //mirrorring is trigered!
+            }
         }
 
         

@@ -1,6 +1,7 @@
 '''
+# Controller/Tofino2
 # Version 2.0.0
-# Authors: Mateus / Alireza
+# Authors: Mateus, Alireza
 # Lab: LERIS
 # Date: 2025-04-14
 '''
@@ -13,14 +14,12 @@
 ## Add and enable ports (16/0=264, 16/1=265)
 bfrt.port.port.add(DEV_PORT=136, SPEED="BF_SPEED_10G", FEC="BF_FEC_TYP_NONE", PORT_ENABLE =True,AUTO_NEGOTIATION="PM_AN_FORCE_DISABLE")
 bfrt.port.port.add(DEV_PORT=137, SPEED="BF_SPEED_10G", FEC="BF_FEC_TYP_NONE", PORT_ENABLE =True,AUTO_NEGOTIATION="PM_AN_FORCE_DISABLE")
-bfrt.port.port.add(DEV_PORT=448, SPEED="BF_SPEED_100G", FEC="BF_FEC_TYP_NONE", PORT_ENABLE =True)
-bfrt.port.port.add(DEV_PORT=440, SPEED="BF_SPEED_100G", FEC="BF_FEC_TYP_NONE", PORT_ENABLE =True)
 
-## Add loopback port for Mirroring (Packet Cloning)
+## Add loopback Port (Used for INT loop!)
 bfrt.port.port.add(DEV_PORT=144, SPEED="BF_SPEED_10G", FEC="BF_FEC_TYP_NONE")
 bfrt.port.port.mod(DEV_PORT=144, LOOPBACK_MODE='BF_LPBK_MAC_NEAR')
 
-## Egress Mirroring (Enable mirror session 1 in TM)
+## Egress Mirroring (Enable mirror session 1 in TM) (Mirroring bydefault for Tofino2 is 128/6)
 bfrt.mirror.cfg.entry_with_normal(sid=1, direction='EGRESS', session_enable=True, ucast_egress_port=128, ucast_egress_port_valid=True, max_pkt_len=48).push()
 '''
 Extra Ingress Mirroring example: 
