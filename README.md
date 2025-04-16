@@ -4,7 +4,9 @@
 
 
 ### **Note:**
-This paper has been submitted to the Netsoft 2025 Conference and is under review!
+This paper has been submitted to the Netsoft 2025 Conference and is accepted!
+
+![image](https://github.com/user-attachments/assets/73379cf8-daf3-47ac-8a76-7766434bfd7d)
 
 
 ## (1) Connect Tofino & Clone P4 Code
