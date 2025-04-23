@@ -523,7 +523,25 @@ control Ingress(
     ====================================================================================
     */
 
+    // Define Drop Original Pkts 
+    action drop_regular_pkts(){
+        ig_intr_dprsr_md.drop_ctl = 0x1;
+    }
 
+    // Define Drop Cloned Pkts
+    action drop_cloned_pkts(){
+        ig_intr_dprsr_md.drop_ctl = 0x1;
+    }
+
+    // Define to Extract FlowID (IP.dst, Port.dst, Protocol) {UDP Packets}
+    action find_flowID_ipv4_udp(){
+        ig_md.metadata_flowID = hash_function_udp.get({hdr.ipv4.dst_addr, hdr.udp.dstPort, hdr.ipv4.protocol});
+    }
+
+    // Define to Extract FlowID (IP.dst, Port.dst, Protocol) {TCP Packets}
+    action find_flowID_ipv4_tcp(){
+        ig_md.metadata_flowID = hash_function_tcp.get({hdr.ipv4.dst_addr, hdr.tcp.dstPort, hdr.ipv4.protocol});
+    }
 
 
 
@@ -621,36 +639,7 @@ control Ingress(
 
     };
 
-    /*
-    ========================================================================
-    Actions Definition: drop pkts, extract flow ID, and Classification
-    ========================================================================
-    */
-        // Define Drop Original Pkts 
-    action drop_regular_pkts(){
-        ig_intr_dprsr_md.drop_ctl = 0x1;
-    }
-
-    // Define Drop Cloned Pkts
-    action drop_cloned_pkts(){
-        ig_intr_dprsr_md.drop_ctl = 0x1;
-    }
-
-    // Define to Extract FlowID (IP.dst, Port.dst, Protocol) {UDP Packets}
-    action extract_flowID_ipv4_udp(){
-        ig_md.metadata_flowID = hash_function_udp.get({hdr.ipv4.dst_addr, hdr.udp.dstPort, hdr.ipv4.protocol});
-    }
-
-    // Define to Extract FlowID (IP.dst, Port.dst, Protocol) {TCP Packets}
-    action extract_flowID_ipv4_tcp(){
-        ig_md.metadata_flowID = hash_function_tcp.get({hdr.ipv4.dst_addr, hdr.tcp.dstPort, hdr.ipv4.protocol});
-    }
-
-    /*
-    ###################################################################################
-    Classification for each Tree (1-5) 
-    ###################################################################################
-    */
+    
 
     //T1
     action classify_T1_FS(bit<8> classify_result){
@@ -860,6 +849,7 @@ control Ingress(
             ig_md.classification.metadata_classT3: exact;
             ig_md.classification.metadata_classT4: exact;
             ig_md.classification.metadata_classT5: exact;
+            
         }
         actions = {
             final_classification();
@@ -874,17 +864,11 @@ control Ingress(
 
 
     apply {
-    /*
-    =============================================================================================
-    Ingress Processing
-    Input: (1) Original Packets, (2) Cloned Packets
-    Output: (1) Marked Original Packets with ECT(1), (2) Classify the flow based on the Cloned Packets 
-    =============================================================================================
-    */   
-    
-    //*** Check for cloned pkts (Port: 128) ***//
+        
+    // //* Check for cloned pkts *//
     if (ig_intr_md.ingress_port == MIRROR_PORT){
-        ig_md.metadata_flowID = hdr.mirror.flowid; 
+        ig_tm_md.ucast_egress_port = 100; //drop????
+        ig_md.metadata_flowID = hdr.mirror.flowid;
         bit<8> temp_index = 0;
         write_flow_id_reg.execute(temp_index);
 
@@ -1013,8 +997,7 @@ control Ingress(
 
         drop_cloned_pkts();
 
-    } // end of If block for Cloned Packets
-    else{
+    }else{
         
         // 1/1 -> 1/0
         if (ig_intr_md.ingress_port == 137) {
@@ -1062,10 +1045,10 @@ control Ingress(
 
         //MARKINGGGG    
         if(hdr.tcp.isValid()){
-            extract_flowID_ipv4_tcp();
+            find_flowID_ipv4_tcp();
         }
         else if(hdr.udp.isValid()){
-            extract_flowID_ipv4_udp();
+            find_flowID_ipv4_udp();
         }
         
         bit<8> marking_decision = read_shared_register.execute(ig_md.metadata_flowID);
@@ -1531,11 +1514,11 @@ control Egress(
             }
         };    
 
-    action extract_flowID_ipv4_udp(){
+    action find_flowID_ipv4_udp(){
         eg_md.metadata_flowID = hash_function_udp.get({hdr.ipv4.dst_addr, hdr.udp.dstPort, hdr.ipv4.protocol});
     }
 
-    action extract_flowID_ipv4_tcp(){
+    action find_flowID_ipv4_tcp(){
         eg_md.metadata_flowID = hash_function_tcp.get({hdr.ipv4.dst_addr, hdr.tcp.dstPort, hdr.ipv4.protocol});
     }
         
@@ -1808,10 +1791,10 @@ control Egress(
         
         // Flow ID starts
         if (hdr.ipv4.isValid() && hdr.ipv4.protocol == PROTO_UDP) {
-            extract_flowID_ipv4_udp();
+            find_flowID_ipv4_udp();
         }
         else if(hdr.ipv4.isValid() && hdr.ipv4.protocol == PROTO_TCP){
-            extract_flowID_ipv4_tcp();
+            find_flowID_ipv4_tcp();
         }
 
 
