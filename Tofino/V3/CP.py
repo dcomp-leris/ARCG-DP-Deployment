@@ -10,6 +10,7 @@
 ## Add ports (136,137,448,440) & Loopback (144)
 ## Enable Exress/Ingress Mirroring 
 ## Port Rate/ Burst Size Configuration
+## 136 ==> Luigi / 137==> Peach
 ############################################################################################################################
 ## Add and enable ports (16/0=264, 16/1=265)
 bfrt.port.port.add(DEV_PORT=136, SPEED="BF_SPEED_10G", FEC="BF_FEC_TYP_NONE", PORT_ENABLE =True,AUTO_NEGOTIATION="PM_AN_FORCE_DISABLE")
@@ -43,6 +44,17 @@ Description (Port Configuration in TM):
     bfrt.tf2.tm.port.sched_shaping.mod(dev_port=136, unit='PPS', max_rate=15000, max_burst_size=100)
     bfrt.tf2.tm.port.sched_shaping.mod(dev_port=137, unit='PPS', max_rate=15000, max_burst_size=100)
 '''
+
+
+bfrt.tf2.tm.queue.sched_cfg.mod(pipe=1, pg_id=1, pg_queue=0,dwrr_weight=1) #136Q0
+bfrt.tf2.tm.queue.sched_cfg.mod(pipe=1, pg_id=1, pg_queue=1,dwrr_weight=16) #136Q1
+# bfrt.tf2.tm.queue.sched_cfg.mod(pipe=1, pg_id=1, pg_queue=2,dwrr_weight=1) #136Q2
+bfrt.tf2.tm.queue.sched_cfg.mod(pipe=1, pg_id=1, pg_queue=16,dwrr_weight=1) #137Q0
+bfrt.tf2.tm.queue.sched_cfg.mod(pipe=1, pg_id=1, pg_queue=17,dwrr_weight=16) #137Q1
+# bfrt.tf2.tm.queue.sched_cfg.mod(pipe=1, pg_id=1, pg_queue=18,dwrr_weight=1) #137Q2
+
+
+
 ############################################################################################################################
 # EWMA/LPF Configuration ***************************************************************************************************
 ### EWMA Computing Using Low Pass Filter (LPF) Configuration
@@ -70,6 +82,7 @@ Algorithm: Random Forest (RF)
     Features: IPG, PS, IFG, FS (EWMA Alpha = 0.95)
     Aggregation: Majoraity
 '''
+
 ### constant variabls
 max_value_16_bit = 65535    # (2^16 - 1)
 max_value_20_bit = 1048575  # (2^20 - 1)
@@ -87,13 +100,13 @@ IPI Check (when FS ≥ 1668):
     If IPI ≥ 1404 → Class: CG
 '''
 #FS
-bfrt.RF.pipe.Ingress.table_T1_FS.add_with_classify_T1_FS(metadata_frame_size_start=0, metadata_frame_size_end=42, classify_result=3)
-bfrt.RF.pipe.Ingress.table_T1_FS.add_with_classify_T1_FS(metadata_frame_size_start=43, metadata_frame_size_end=1667, classify_result=2)
-bfrt.RF.pipe.Ingress.table_T1_FS.add_with_classify_T1_FS(metadata_frame_size_start=1668, metadata_frame_size_end=max_value_16_bit, classify_result=0)
+bfrt.RF.pipe.Ingress.table_T1_FS.add_with_classify_T1(metadata_frame_size_start=0, metadata_frame_size_end=42, classify_result=3)
+bfrt.RF.pipe.Ingress.table_T1_FS.add_with_classify_T1(metadata_frame_size_start=43, metadata_frame_size_end=1667, classify_result=2)
+bfrt.RF.pipe.Ingress.table_T1_FS.add_with_classify_T1(metadata_frame_size_start=1668, metadata_frame_size_end=max_value_16_bit, classify_result=0)
 
 #IPG
-bfrt.RF.pipe.Ingress.table_T1_IPG.add_with_classify_T1_IPG(metadata_ipg_20lsb_start=0, metadata_ipg_20lsb_end=1403, classify_result=1)
-bfrt.RF.pipe.Ingress.table_T1_IPG.add_with_classify_T1_IPG(metadata_ipg_20lsb_start=1404, metadata_ipg_20lsb_end=max_value_20_bit, classify_result=2)
+bfrt.RF.pipe.Ingress.table_T1_IPG.add_with_classify_T1(metadata_ipg_20lsb_start=0, metadata_ipg_20lsb_end=1403, classify_result=1)
+bfrt.RF.pipe.Ingress.table_T1_IPG.add_with_classify_T1(metadata_ipg_20lsb_start=1404, metadata_ipg_20lsb_end=max_value_20_bit, classify_result=2)
 
 
 '''
@@ -109,12 +122,12 @@ If IFI ≥ 31503:
         If IPI > 1403 → Class: CG       
 '''
 #IFG
-bfrt.RF.pipe.Ingress.table_T2_IFG.add_with_classify_T2_IFG(metadata_ifg_20lsb_start=0, metadata_ifg_20lsb_end=31502, classify_result=3)
-bfrt.RF.pipe.Ingress.table_T2_IFG.add_with_classify_T2_IFG(metadata_ifg_20lsb_start=31503, metadata_ifg_20lsb_end=max_value_20_bit, classify_result=0)
+bfrt.RF.pipe.Ingress.table_T2_IFG.add_with_classify_T2(metadata_ifg_20lsb_start=0, metadata_ifg_20lsb_end=31502, classify_result=3)
+bfrt.RF.pipe.Ingress.table_T2_IFG.add_with_classify_T2(metadata_ifg_20lsb_start=31503, metadata_ifg_20lsb_end=max_value_20_bit, classify_result=0)
 
 #IPG
-bfrt.RF.pipe.Ingress.table_T2_IPG.add_with_classify_T2_IPG(metadata_ipg_20lsb_start=0, metadata_ipg_20lsb_end=1403, classify_result=1)
-bfrt.RF.pipe.Ingress.table_T2_IPG.add_with_classify_T2_IPG(metadata_ipg_20lsb_start=1404, metadata_ipg_20lsb_end=max_value_20_bit, classify_result=2)
+bfrt.RF.pipe.Ingress.table_T2_IPG.add_with_classify_T2(metadata_ipg_20lsb_start=0, metadata_ipg_20lsb_end=1403, classify_result=1)
+bfrt.RF.pipe.Ingress.table_T2_IPG.add_with_classify_T2(metadata_ipg_20lsb_start=1404, metadata_ipg_20lsb_end=max_value_20_bit, classify_result=2)
 
 
 
@@ -137,16 +150,16 @@ Step 3: Check IPI
     If IPI > 1403 → Class: CG
 '''
 #FS
-bfrt.RF.pipe.Ingress.table_T3_FS.add_with_classify_T3_FS(metadata_frame_size_start=0, metadata_frame_size_end=42, classify_result=3)
-bfrt.RF.pipe.Ingress.table_T3_FS.add_with_classify_T3_FS(metadata_frame_size_start=43, metadata_frame_size_end=max_value_16_bit, classify_result=0)
+bfrt.RF.pipe.Ingress.table_T3_FS.add_with_classify_T3(metadata_frame_size_start=0, metadata_frame_size_end=42, classify_result=3)
+bfrt.RF.pipe.Ingress.table_T3_FS.add_with_classify_T3(metadata_frame_size_start=43, metadata_frame_size_end=max_value_16_bit, classify_result=0)
 
 #IFG
-bfrt.RF.pipe.Ingress.table_T3_IFG.add_with_classify_T3_IFG(metadata_ifg_20lsb_start=0, metadata_ifg_20lsb_end=57938, classify_result=2)
-bfrt.RF.pipe.Ingress.table_T3_IFG.add_with_classify_T3_IFG(metadata_ifg_20lsb_start=57939, metadata_ifg_20lsb_end=max_value_20_bit, classify_result=0)
+bfrt.RF.pipe.Ingress.table_T3_IFG.add_with_classify_T3(metadata_ifg_20lsb_start=0, metadata_ifg_20lsb_end=57938, classify_result=2)
+bfrt.RF.pipe.Ingress.table_T3_IFG.add_with_classify_T3(metadata_ifg_20lsb_start=57939, metadata_ifg_20lsb_end=max_value_20_bit, classify_result=0)
 
 #IPG
-bfrt.RF.pipe.Ingress.table_T3_IPG.add_with_classify_T3_IPG(metadata_ipg_20lsb_start=0, metadata_ipg_20lsb_end=1403, classify_result=1)
-bfrt.RF.pipe.Ingress.table_T3_IPG.add_with_classify_T3_IPG(metadata_ipg_20lsb_start=1404, metadata_ipg_20lsb_end=max_value_20_bit, classify_result=2)
+bfrt.RF.pipe.Ingress.table_T3_IPG.add_with_classify_T3(metadata_ipg_20lsb_start=0, metadata_ipg_20lsb_end=1403, classify_result=1)
+bfrt.RF.pipe.Ingress.table_T3_IPG.add_with_classify_T3(metadata_ipg_20lsb_start=1404, metadata_ipg_20lsb_end=max_value_20_bit, classify_result=2)
 
 
 '''
@@ -179,17 +192,17 @@ Step 2b: (High IFI Range)
         (This covers the remaining cases where IFI is high and IPI isn’t extremely low or high)
 '''
 #IFG
-bfrt.RF.pipe.Ingress.table_T4_IFG.add_with_classify_T4_IFG(metadata_ifg_20lsb_start=0, metadata_ifg_20lsb_end=57831, classify_result=6)
-bfrt.RF.pipe.Ingress.table_T4_IFG.add_with_classify_T4_IFG(metadata_ifg_20lsb_start=57832, metadata_ifg_20lsb_end=max_value_20_bit, classify_result=5)
+bfrt.RF.pipe.Ingress.table_T4_IFG.add_with_classify_T4(metadata_ifg_20lsb_start=0, metadata_ifg_20lsb_end=57831, classify_result=6)
+bfrt.RF.pipe.Ingress.table_T4_IFG.add_with_classify_T4(metadata_ifg_20lsb_start=57832, metadata_ifg_20lsb_end=max_value_20_bit, classify_result=5)
 
 #FS
-bfrt.RF.pipe.Ingress.table_T4_FS.add_with_classify_T4_FS(metadata_frame_size_start=0, metadata_frame_size_end=44, classify_result=3)
-bfrt.RF.pipe.Ingress.table_T4_FS.add_with_classify_T4_FS(metadata_frame_size_start=45, metadata_frame_size_end=max_value_16_bit, classify_result=2)
+bfrt.RF.pipe.Ingress.table_T4_FS.add_with_classify_T4(metadata_frame_size_start=0, metadata_frame_size_end=44, classify_result=3)
+bfrt.RF.pipe.Ingress.table_T4_FS.add_with_classify_T4(metadata_frame_size_start=45, metadata_frame_size_end=max_value_16_bit, classify_result=2)
 
 #IPG
-bfrt.RF.pipe.Ingress.table_T4_IPG.add_with_classify_T4_IPG(metadata_ipg_20lsb_start=0, metadata_ipg_20lsb_end=1403, classify_result=1)
-bfrt.RF.pipe.Ingress.table_T4_IPG.add_with_classify_T4_IPG(metadata_ipg_20lsb_start=1403, metadata_ipg_20lsb_end=218208, classify_result=2)
-bfrt.RF.pipe.Ingress.table_T4_IPG.add_with_classify_T4_IPG(metadata_ipg_20lsb_start=218208, metadata_ipg_20lsb_end=max_value_20_bit, classify_result=3)
+bfrt.RF.pipe.Ingress.table_T4_IPG.add_with_classify_T4(metadata_ipg_20lsb_start=0, metadata_ipg_20lsb_end=1403, classify_result=1)
+bfrt.RF.pipe.Ingress.table_T4_IPG.add_with_classify_T4(metadata_ipg_20lsb_start=1403, metadata_ipg_20lsb_end=218208, classify_result=2)
+bfrt.RF.pipe.Ingress.table_T4_IPG.add_with_classify_T4(metadata_ipg_20lsb_start=218208, metadata_ipg_20lsb_end=max_value_20_bit, classify_result=3)
 
 # tree4 *************************************************
 '''
@@ -205,17 +218,17 @@ IPI Check (when FS > 42):
     If IPI > 1382 → Class: CG
 '''
 #FS
-bfrt.RF.pipe.Ingress.table_T5_FS.add_with_classify_T5_FS(metadata_frame_size_start=0, metadata_frame_size_end=42, classify_result=3)
-bfrt.RF.pipe.Ingress.table_T5_FS.add_with_classify_T5_FS(metadata_frame_size_start=43, metadata_frame_size_end=max_value_16_bit, classify_result=0)
+bfrt.RF.pipe.Ingress.table_T5_FS.add_with_classify_T5(metadata_frame_size_start=0, metadata_frame_size_end=42, classify_result=3)
+bfrt.RF.pipe.Ingress.table_T5_FS.add_with_classify_T5(metadata_frame_size_start=43, metadata_frame_size_end=max_value_16_bit, classify_result=0)
 #IPG
-bfrt.RF.pipe.Ingress.table_T5_IPG.add_with_classify_T5_IPG(metadata_ipg_20lsb_start=0, metadata_ipg_20lsb_end=1382, classify_result=1)
-bfrt.RF.pipe.Ingress.table_T5_IPG.add_with_classify_T5_IPG(metadata_ipg_20lsb_start=1383, metadata_ipg_20lsb_end=max_value_20_bit, classify_result=2)
+bfrt.RF.pipe.Ingress.table_T5_IPG.add_with_classify_T5(metadata_ipg_20lsb_start=0, metadata_ipg_20lsb_end=1382, classify_result=1)
+bfrt.RF.pipe.Ingress.table_T5_IPG.add_with_classify_T5(metadata_ipg_20lsb_start=1383, metadata_ipg_20lsb_end=max_value_20_bit, classify_result=2)
 
 
 
 
 #Threshold of Mirroring
-bfrt.RF.pipe.Egress.table_threshold.add_with_decisionMirror(packet_counter_value_start=0, packet_counter_value_end=20,frame_counter_value_start=0,frame_counter_value_end=3)
+#bfrt.RF.pipe.Egress.table_threshold.add_with_decisionMirror(packet_counter_value_start=0, packet_counter_value_end=0,frame_counter_value_start=0,frame_counter_value_end=0)
 
 
 # Aggregation & Final Decision 
@@ -233,7 +246,7 @@ with open("/home/leris/p4code/alireza/RF_deployment/CLONE_EGRESS/change_mirror/T
             votes[key.strip()] = int(value.strip())
 
         # Use the BFRT API to add the entry
-        bfrt.RF.pipe.Ingress.table_majority.add_with_final_classification(
+        bfrt.RF.pipe.Ingress.table_majority.add_with_trees_aggregation(
             metadata_classT1 = votes['t1'],
             metadata_classT2 = votes['t2'],
             metadata_classT3 = votes['t3'],

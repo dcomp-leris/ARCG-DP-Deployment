@@ -183,6 +183,7 @@ header bridge_h {
     bit<16> bridge_qid;
 }
 
+//*** Count the Hops ***//
 header nodeCount_h{
     bit<16>  id;
     bit<16>  count;
@@ -522,11 +523,6 @@ control Ingress(
     Flow ID Extraction From the Ingress Packets
     ====================================================================================
     */
-
-
-
-
-
     // Write RTP Marker Header Value in 'rtp_marker_reg' 
     // Note: rtp_marker_reg is 8 bit while RTP Marker header is one bit! 
     Register<bit<8>, _> (N_PORTS) rtp_marker_reg;
@@ -627,9 +623,9 @@ control Ingress(
     ========================================================================
     */
         // Define Drop Original Pkts 
-    action drop_regular_pkts(){
-        ig_intr_dprsr_md.drop_ctl = 0x1;
-    }
+    // action drop_regular_pkts(){
+    //     ig_intr_dprsr_md.drop_ctl = 0x1;
+    // }
 
     // Define Drop Cloned Pkts
     action drop_cloned_pkts(){
@@ -653,20 +649,20 @@ control Ingress(
     */
 
     //T1
-    action classify_T1_FS(bit<8> classify_result){
+    action classify_T1(bit<8> classify_result){
         ig_md.classification.metadata_classT1 = classify_result;
     }
 
-    action classify_T1_IPG(bit<8> classify_result){
-        ig_md.classification.metadata_classT1 = classify_result;
-    }
+    // action classify_T1_IPG(bit<8> classify_result){
+    //     ig_md.classification.metadata_classT1 = classify_result;
+    // }
 
     table table_T1_FS{
         key = {
             ig_md.metadata_frame_size: range;
         }
         actions = {
-            classify_T1_FS();
+            classify_T1();
             NoAction;
         }
         size = 1024;
@@ -678,7 +674,7 @@ control Ingress(
             ig_md.metadata_ipg_20lsb: range;
         }
         actions = {
-            classify_T1_IPG();
+            classify_T1();
             NoAction;
         }
         size = 1024;
@@ -686,20 +682,20 @@ control Ingress(
     }
 
     //T2
-    action classify_T2_IFG(bit<8> classify_result){
+    action classify_T2(bit<8> classify_result){
         ig_md.classification.metadata_classT2 = classify_result;
     }
 
-    action classify_T2_IPG(bit<8> classify_result){
-        ig_md.classification.metadata_classT2 = classify_result;
-    }
+    // action classify_T2_IPG(bit<8> classify_result){
+    //     ig_md.classification.metadata_classT2 = classify_result;
+    // }
     
     table table_T2_IFG{
         key = {
             ig_md.metadata_ifg_20lsb: range;
         }
         actions = {
-            classify_T2_IFG();
+            classify_T2();
             NoAction;
         }
         size = 1024;
@@ -711,24 +707,24 @@ control Ingress(
             ig_md.metadata_ipg_20lsb: range;
         }
         actions = {
-            classify_T2_IPG();
+            classify_T2();
             NoAction;
         }
         size = 1024;
         default_action = NoAction();
     }
 
-    action classify_T3_FS(bit<8> classify_result){
+    action classify_T3(bit<8> classify_result){
         ig_md.classification.metadata_classT3 = classify_result;
     }
 
-    action classify_T3_IFG(bit<8> classify_result){
-        ig_md.classification.metadata_classT3 = classify_result;
-    }
+    // action classify_T3_IFG(bit<8> classify_result){
+    //     ig_md.classification.metadata_classT3 = classify_result;
+    // }
 
-    action classify_T3_IPG(bit<8> classify_result){
-        ig_md.classification.metadata_classT3 = classify_result;
-    }
+    // action classify_T3_IPG(bit<8> classify_result){
+    //     ig_md.classification.metadata_classT3 = classify_result;
+    // }
 
 
     //T3
@@ -737,7 +733,7 @@ control Ingress(
             ig_md.metadata_frame_size: range;
         }
         actions = {
-            classify_T3_FS();
+            classify_T3();
             NoAction;
         }
         size = 1024;
@@ -749,7 +745,7 @@ control Ingress(
             ig_md.metadata_ifg_20lsb: range;
         }
         actions = {
-            classify_T3_IFG();
+            classify_T3();
             NoAction;
         }
         size = 1024;
@@ -761,23 +757,23 @@ control Ingress(
             ig_md.metadata_ipg_20lsb: range;
         }
         actions = {
-            classify_T3_IPG();
+            classify_T3();
             NoAction;
         }
         size = 1024;
         default_action = NoAction();
     }
-    //T4
 
-    action classify_T4_IPG(bit<8> classify_result){
+    //T4
+    action classify_T4(bit<8> classify_result){
         ig_md.classification.metadata_classT4 = classify_result;
     }
-    action classify_T4_IFG(bit<8> classify_result){
-        ig_md.classification.metadata_classT4 = classify_result;
-    }
-    action classify_T4_FS(bit<8> classify_result){
-        ig_md.classification.metadata_classT4 = classify_result;
-    }
+    // action classify_T4_IFG(bit<8> classify_result){
+    //     ig_md.classification.metadata_classT4 = classify_result;
+    // }
+    // action classify_T4_FS(bit<8> classify_result){
+    //     ig_md.classification.metadata_classT4 = classify_result;
+    // }
 
     
     table table_T4_IFG{
@@ -785,7 +781,7 @@ control Ingress(
             ig_md.metadata_ifg_20lsb: range;
         }
         actions = {
-            classify_T4_IFG();
+            classify_T4();
             NoAction;
         }
         size = 1024;
@@ -797,7 +793,7 @@ control Ingress(
             ig_md.metadata_ipg_20lsb: range;
         }
         actions = {
-            classify_T4_IPG();
+            classify_T4();
             NoAction;
         }
         size = 1024;
@@ -809,7 +805,7 @@ control Ingress(
             ig_md.metadata_frame_size: range;
         }
         actions = {
-            classify_T4_FS();
+            classify_T4();
             NoAction;
         }
         size = 1024;
@@ -817,20 +813,20 @@ control Ingress(
     }
 
     //T5
-    action classify_T5_FS(bit<8> classify_result){
+    action classify_T5(bit<8> classify_result){
         ig_md.classification.metadata_classT5 = classify_result;
     }
 
-    action classify_T5_IPG(bit<8> classify_result){
-        ig_md.classification.metadata_classT5 = classify_result;
-    }
+    // action classify_T5_IPG(bit<8> classify_result){
+    //     ig_md.classification.metadata_classT5 = classify_result;
+    // }
 
     table table_T5_FS{
         key = {
             ig_md.metadata_frame_size: range;
         }
         actions = {
-            classify_T5_FS();
+            classify_T5();
             NoAction;
         }
         size = 1024;
@@ -841,15 +837,15 @@ control Ingress(
             ig_md.metadata_ipg_20lsb: range;
         }
         actions = {
-            classify_T5_IPG();
+            classify_T5();
             NoAction;
         }
         size = 1024;
         default_action = NoAction();
     }
 
-    //majority
-    action final_classification(bit<8> majority){
+    //Aggregation of Trees (majority)
+    action trees_aggregation(bit<8> majority){
         //ig_md.metadata_final_classification = (bit<8>) majority;
         ig_md.classification.metadata_final_classification = (bit<8>) majority;
     }
@@ -862,7 +858,7 @@ control Ingress(
             ig_md.classification.metadata_classT5: exact;
         }
         actions = {
-            final_classification();
+            trees_aggregation();
             NoAction;
         }
         size = 1024;
@@ -877,12 +873,12 @@ control Ingress(
     /*
     =============================================================================================
     Ingress Processing
-    Input: (1) Original Packets, (2) Cloned Packets
+    Input: (1) Original Packets or (2) Cloned Packets
     Output: (1) Marked Original Packets with ECT(1), (2) Classify the flow based on the Cloned Packets 
     =============================================================================================
     */   
     
-    //*** Check for cloned pkts (Port: 128) ***//
+    //******************************************* Check for cloned pkts (Port: 128) *******************************************//
     if (ig_intr_md.ingress_port == MIRROR_PORT){
         ig_md.metadata_flowID = hdr.mirror.flowid; 
         bit<8> temp_index = 0;
@@ -898,10 +894,6 @@ control Ingress(
             //counter_packets_frame.count(ig_md.metadata_flowID);
             write_counter_packets_frame.execute(ig_md.metadata_flowID);
         }
-
-
-
-
         //packet size
         lpf_input_packet_size = hdr.mirror.packet_size;
         lpf_output_packet_size = lpf_packet_size.execute(lpf_input_packet_size,0);
@@ -944,36 +936,38 @@ control Ingress(
         }
         
 
-        // Alireza added
+        // IFG Extracted from RTP Header (Deterministic From Host)
         if (hdr.mirror.host_ifg!=0){
             //store_ingress_host_ifg_reg(address) without return
             write_ingress_host_ifg_reg.execute(ig_md.metadata_flowID);
         }
-        // Alireza added
-
-
-        //queue delay (previous + current. the collect_info python resets when read)
+      
+        // Accumulative Queue Delay (For monitoring the Queue Delay using INT, so each reading by INT remoe the Register!)
+        // queue delay (previous + current. the collect_info python resets when read)
         ig_md.metadata_queue_delay_new = hdr.mirror.queue_delay;
-        sum_queue_delay.execute(temp_index);
+        sum_queue_delay.execute(temp_index); // Register for Accumulative Latency
 
 
-        //classification
+        // Flow Classification 
         ig_md.metadata_ifg_20lsb = ig_md.metadata_ifg[19:0];
         ig_md.metadata_ipg_20lsb = ig_md.metadata_ipg[19:0];
 
-        //T1
+        // Note: Max variable size of the 'Range' for Tables is 20 bits, so we convert the features values received from 
+        // cloned packets from 32 bits into 20 bits.
+
+        // T1
         table_T1_FS.apply();
         if(ig_md.classification.metadata_classT1 == 0){
             table_T1_IPG.apply();
         }
 
-        //T2
+        // T2
         table_T2_IFG.apply();
         if(ig_md.classification.metadata_classT2 == 0){
             table_T2_IPG.apply();
         }
 
-        //T3
+        // T3
         table_T3_FS.apply();
         if(ig_md.classification.metadata_classT3 == 0){
             table_T3_IFG.apply();
@@ -982,7 +976,7 @@ control Ingress(
             table_T3_IPG.apply();
         }
 
-        //T4
+        // T4
         table_T4_IFG.apply();
         if(ig_md.classification.metadata_classT4 == 5){
             table_T4_IPG.apply();
@@ -991,7 +985,7 @@ control Ingress(
             table_T4_FS.apply();
         }
 
-        //T5
+        // T5
         table_T5_FS.apply();
         if(ig_md.classification.metadata_classT5 == 0){
             table_T5_IPG.apply();
@@ -1004,18 +998,21 @@ control Ingress(
         write_metadata_classT4.execute(ig_md.metadata_flowID);
         write_metadata_classT5.execute(ig_md.metadata_flowID);
 
-        
         write_shared_register.execute(ig_md.metadata_flowID);
-
-
-
-
 
         drop_cloned_pkts();
 
     } // end of If block for Cloned Packets
+
+
+    //******************************************* Check for Original pkts (Port: 128) *******************************************//
     else{
-        
+        /***
+        Forwarding Rules 
+        If Ingress is Interface(137) Then Forward Interface(136)
+        If Ingress is Interface(136) Then Forward Interface(137)
+
+        ***/
         // 1/1 -> 1/0
         if (ig_intr_md.ingress_port == 137) {
             ig_tm_md.ucast_egress_port = 136;
@@ -1038,29 +1035,29 @@ control Ingress(
             }
         }
 
-        
-        // if(ig_intr_md.ingress_port == recirc_port){
-        //     ig_tm_md.ucast_egress_port = 136;
-        // }
-
+        // Tofino1 (P4TG)
         // 23/0 (448) TF1 -> 1/1(137) Luigi
         else if (ig_intr_md.ingress_port == 448) {
             ig_tm_md.ucast_egress_port = 137;
         }
-
+        // Tofino1 (P4TG)
         // 24/0 (40) TF1 -> 1/1(137) Luigi
         else if (ig_intr_md.ingress_port == 440) {
             ig_tm_md.ucast_egress_port = 137;
         }
+
+        // Original Packets whose ingress is not 128 (for cloned packets) and is out of list [136,137,440,448] 
         else{
-            //RECIRCULACAO
+            //Recirculating INT Packets 
             ig_tm_md.ucast_egress_port = 136;
         }
 
-        
+        /***
+        ##############################################################################################################
+        Packet ECT(1) Marking 
+        ##############################################################################################################
+        ***/  
 
-
-        //MARKINGGGG    
         if(hdr.tcp.isValid()){
             extract_flowID_ipv4_tcp();
         }
@@ -1068,42 +1065,52 @@ control Ingress(
             extract_flowID_ipv4_udp();
         }
         
+        //*** marking_decision --> 0 or 1 or 2 or 3 ***// 
+        // 0--> Non-Classified, 1--> AR | 2--> CG | 3--> Other (Non-[Ar or CG])
         bit<8> marking_decision = read_shared_register.execute(ig_md.metadata_flowID);
 
+        //*** Not Mark INT Packet ***/
         if(hdr.nodeCount.isValid()){
             marking_decision = 0;
         }
 
-
+        //*** marking_decision = 1 (AR) ***//
+        //*** Action --> Mark ECT(1) & Set DSCP(46)
         if(marking_decision == 1){ // AR
             hdr.ipv4.ecn = 1;
-            hdr.ipv4.dscp = 46; 
-            
+            hdr.ipv4.dscp = 46;    
         }
+        //*** marking_decision = 2 (CG) ***//
+        //*** Action --> Mark ECT(1) & Set DSCP(34)
         else if(marking_decision == 2){ // CG
             hdr.ipv4.ecn = 1;
             hdr.ipv4.dscp = 34;
         }
+
+        //*** marking_decision = 1 (Other) ***//
+        //*** Action --> Mark ECT(0) & Set DSCP(46)
         else if(marking_decision == 3){ // Other or Non-(AR or CG)
+            //hdr.ipv4.ecn = 0;
             hdr.ipv4.dscp = 50;
         }
 
-        // Check ECN for ECT(1)
-         if(hdr.ipv4.ecn == 1){
+        /***
+        ##############################################################################################################
+        L4S vs Classic Queue Allocation
+        Queue_ID ==1 ==> L4S
+        Queue_ID ==0 ==> Classic 
+        ##############################################################################################################
+        ***/  
+        if(hdr.ipv4.ecn == 1){
         ig_tm_md.qid = 1; // Set L4S Queue 
                  }
+        // Note: Default Queue ID is 0 for other packets that we let it go on!
 
         //** Insert ingress timestamp into bridge header to be used in the egress**//
         hdr.bridge.setValid();
         hdr.bridge.bridge_ingress_port = (bit<16>)ig_intr_md.ingress_port;
         hdr.bridge.ingress_global_tstamp = ig_intr_prsr_md.global_tstamp;
         hdr.bridge.bridge_qid = (bit<16>)ig_tm_md.qid; 
-        
-        //ig_tm_md.ucast_egress_port = 100; //"""drop the original"
-
-
-        
-        //hdr.cute_new_header.setInvalid();
     }
     
     }    
@@ -1150,42 +1157,48 @@ control IngressDeparser( //SwitchIngressDeparser
 }
 
 
+/***
+-------------------------------------------------------------------------------------------------------------------------------------------
+Traffic Manager (TM) - non-programmable block located between Ingress and Egress (e.g., Queue Management)
 
+Note: TM will receive the packet cloned at the Egress, and will recirculate this packet to the Ingress.
+// ----------------------------------------------------------------------------------------------------------------------------------------
+***/
 
-// ---------------------------------------------------------------------------
-// Traffic Manager - non-programmable block (queues)
-// ---------------------------------------------------------------------------
-// TM will receive the packet cloned at the Egress, and will recirculate this 
-// packet to the Ingress.
-// ---------------------------------------------------------------------------
 
 // ****************************** (3) Egress (Parser/Ingress (MA) Processing/Deparser)  ******************************************//
+
+// ---------------------------------------------------------------------------
+// *** (3-1) Egress Parser *** ///
+// ---------------------------------------------------------------------------
 parser EgressParser(
         packet_in pkt,
         out headers_t hdr,
         out metadata_t eg_md,
         out egress_intrinsic_metadata_t eg_intr_md) {
-
+    
+    //*** Starts State Machine ***///
     state start {
         pkt.extract(eg_intr_md);
         transition select(eg_intr_md.egress_port){
-            (MIRROR_PORT): parse_mirror;
+            (MIRROR_PORT): parse_mirror;                    // Mirror Packet Port = 128 
             (_): parse_bridge;
         }
     }
 
-    /** E2E MIRRORED PKTS **/
+    /** E2E MIRRORED PKTS (Parsing Cloned Packets)**/
     state parse_mirror{
         pkt.extract(hdr.mirror);
         transition accept;
     }
 
-
+    //** Parsing Bridge for original Packets **//
     state parse_bridge{
         pkt.extract(hdr.bridge);
         transition parse_ethernet;
     }
 
+    // ** Ethernet Header Parsing **//
     state parse_ethernet {
         pkt.extract(hdr.ethernet);
         transition select (hdr.ethernet.ether_type) {
@@ -1194,6 +1207,7 @@ parser EgressParser(
         }
     }
 
+    // ** IPv4 Header Parsing **//
     state parse_ipv4 {
         pkt.extract(hdr.ipv4);
         transition select(hdr.ipv4.protocol) {
@@ -1204,16 +1218,19 @@ parser EgressParser(
       }
     }
 
+    // ** UDP Header Parsing **//
     state parse_udp {
         pkt.extract(hdr.udp);
         transition parse_rtp;
     }
 
+    // ** RTP Header Parsing **//
     state parse_rtp {
         pkt.extract(hdr.rtp);
         transition accept;
     }
 
+    // ** INT Header Parsing **//
     state parse_INT{
         pkt.extract(hdr.nodeCount);
         eg_md.parser_metadata.remaining = hdr.nodeCount.count;
@@ -1223,19 +1240,25 @@ parser EgressParser(
             0: accept;
         }
     }
-
+    // ** INT Header Parsing **//
     state parse_two_INT{
         pkt.extract(hdr.INT.next);
         pkt.extract(hdr.INT.next);
         transition accept;
     }
-
+    // ** INT Header Parsing **//
     state parse_one_INT{
         pkt.extract(hdr.INT.next);
         transition accept;
     }
 }
 
+
+
+
+// ---------------------------------------------------------------------------
+// *** (3-2) Egress Match/Action (MA) Processing *** ///
+// ---------------------------------------------------------------------------
 control Egress(
         inout headers_t hdr,
         inout metadata_t eg_md,
@@ -1248,16 +1271,21 @@ control Egress(
         bit<32> enq_qdepth;
         value_t EWMA;
         bit<32> EWMA_enq_qdepth;
-        bit<16> rand_classic;
+
+        bit<16> rand_classic; 
         bit<16> rand_l4s;
 
-        // Variabl for Threshold
+        // *** Variables for Classification Mirroring Threshold *** //
+        // ****** Number of RTP Frames ******* //
+        // ****** Number of UDP Packets ******* //
         bit<8> frame_counter_value;
         bit<8> packet_counter_value;
+
+
         //IPG
         bit<32> IPG;
 
-        //Hash<bit<8>>(HashAlgorithm_t.CRC8) decider_hash; //2 to the power of 8 possible flows
+        // *** Hash Function Using Extern Function *** //
         Hash<bit<8>>(HashAlgorithm_t.CRC8) hash_function_tcp; //2 to the power of 8 possible flows
         Hash<bit<8>>(HashAlgorithm_t.CRC8) hash_function_udp; //2 to the power of 8 possible flows
 
@@ -1267,38 +1295,42 @@ control Egress(
         //Counter<bit<32>, bit<16>>(NUMBER_OF_QUEUES + NUMBER_OF_QUEUES, CounterType_t.PACKETS) totalPkts;
         //Register<bit<16>, bit<16>>(NUMBER_OF_QUEUES + NUMBER_OF_QUEUES) qdelay_classic;
 
-        Register<bit<32>, bit<16>>(NUMBER_OF_QUEUES+NUMBER_OF_QUEUES) qdelay_l4s;
-        Register<bit<32>, bit<16>>(NUMBER_OF_QUEUES+NUMBER_OF_QUEUES) switchLatency;
+        // *** Dropping/ECN Marking Policy ***
+        Register<bit<32>, bit<16>>(NUMBER_OF_QUEUES + NUMBER_OF_QUEUES) qdelay_l4s;
+        Register<bit<32>, bit<16>>(NUMBER_OF_QUEUES + NUMBER_OF_QUEUES) switchLatency;
         Register<bit<16>, bit<16>>(NUMBER_OF_QUEUES + NUMBER_OF_QUEUES) dropProbability;
         Register<bit<32>, bit<16>>(NUMBER_OF_QUEUES + NUMBER_OF_QUEUES) target_violation;
         Register<bit<32>, bit<16>>(NUMBER_OF_QUEUES + NUMBER_OF_QUEUES) totalPkts;
+
 
         //IPG
         Register<bit<32>, bit<16>>(NUMBER_OF_QUEUES + NUMBER_OF_QUEUES) previous_timestamp_reg;
         Register<bit<32>, bit<16>>(NUMBER_OF_QUEUES + NUMBER_OF_QUEUES) IPG_reg;
         //PACKET SIZE
         Register<bit<16>, bit<16>>(NUMBER_OF_QUEUES+NUMBER_OF_QUEUES) packet_size_reg;
+        
         //TOTALPACKETS TO IPG AND PACKETSIZE
         Register<bit<32>, bit<16>>(NUMBER_OF_QUEUES + NUMBER_OF_QUEUES) totalPkts_IPG; //used also for Packet Size
 
         Random<bit<16>>() rand;
-        // MathUnit<bit<16>>(MathOp_t.DIV, 1) right_shift;
+    
 
 
-        // Declaração do LPF com tamanho para 1024 índices
-        //Lpf<bit<32>, bit<16>>(size=1024) queue_delay_lpf;
+
+        // Declaration of LPF with 1024 index
+        // Lpf<bit<32>, bit<16>>(size=1024) queue_delay_lpf;
 
         
         
         
-        Register<enq_qdepth_v, bit<16>>(NUMBER_OF_QUEUES+NUMBER_OF_QUEUES) enq_qdepth_reg;
+        Register<enq_qdepth_v, bit<16>>(NUMBER_OF_QUEUES + NUMBER_OF_QUEUES) enq_qdepth_reg;
         Register<bit<16>, bit<16>>(1) index_reg;
         Register<bit<32>, _>(N_PORTS) timestamp_ifg_reg;
         Register<bit<16>, _>(N_PORTS) frame_size_reg;
         Register<bit<32>, _>(N_PORTS) timestamp_ipg_reg;
                
         
-        Register<bit<8>, _>(NUMBER_OF_QUEUES+NUMBER_OF_QUEUES) frame_counter_threshhold; // for mirroring control
+        Register<bit<8>, _>(NUMBER_OF_QUEUES + NUMBER_OF_QUEUES) frame_counter_threshhold; // for mirroring control
         Register<bit<8>, _>(N_PORTS) frame_counter; // for mirroring control
 
         Register<bit<8>, _>(NUMBER_OF_QUEUES+NUMBER_OF_QUEUES) packet_counter_threshhold; // for mirroring control
@@ -1481,15 +1513,11 @@ control Egress(
             void apply(inout bit<16> value, out bool result){
 
                 if (rand_l4s < value){
-                    
                     value = value - 1;
                     result = true;
-
                 }else{
-
                     value = value + 1;
                     result = false;
-                
                 }
             }
         };
@@ -1508,24 +1536,26 @@ control Egress(
 
                 value = EWMA;
                 
+
+
+    /*
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    Experienced Congestion (EC) Marking/Droping the Packets (L4S and Classic) Queues
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    */
                 // No drop 
                 if (value <= CoDel_Min){
-                    
                     violation = 0;
                 }
 
-                //Maybe drop 
+                //Dropping/Marking with a Probability 
                 if ((value > CoDel_Min) && (value < CoDel_Max)){
-                    
                     violation = 1;
-
                 }
 
-                //Drop 
+                ////Dropping/Marking (Queue sounds full!)
                 if (value > CoDel_Max){
-
                     violation = 2;
-
                 }
 
             }
@@ -1580,12 +1610,9 @@ control Egress(
 
 
         //INT
-        
         RegisterAction<bit<32>, bit<16>, bit<32>>(switchLatency) switchLatencyAction = {
             void apply(inout bit<32> value, out bit<32> result) {
-       
                 value = queue_delay;
-
             }
 
         };    
@@ -1770,7 +1797,7 @@ control Egress(
                     if (drop_decision_l4s == true){
                         
                         mark_ecn_pkt.count((bit<32>)eg_md.metadata_index);
-                        //hdr.ipv4.ecn = 3;    
+                        hdr.ipv4.ecn = 3;    // Mark EC !!!
                     
                     } 
 
@@ -1858,8 +1885,9 @@ control Egress(
                     update_host_ifg_reg.execute(eg_md.metadata_flowID);
 
                     // Counting the Frame Number
-                    increase_frame_counter.execute((bit<8>)eg_md.metadata_index, counters.frame_count);
-                    frame_counter_value = counters.frame_count;
+                    increase_frame_counter.execute((bit<8>)eg_md.metadata_index, frame_counter_value);// counters.frame_count);
+                    //frame_counter_value = counters.frame_count;
+
                     //counter_frames = increase_frame_counter.execute(eg_md.metadata_flowID);
                     //Alireza end
                 }
@@ -1891,8 +1919,8 @@ control Egress(
 
         hdr.bridge.setInvalid(); //vai que
 
-        increase_packet_counter_flowbased.execute((bit<8>)eg_md.metadata_index, counters.packet_count);
-        packet_counter_value = counters.packet_count;
+        increase_packet_counter_flowbased.execute((bit<8>)eg_md.metadata_index, packet_counter_value); //counters.packet_count);
+        //packet_counter_value = counters.packet_count;
         // Read Thresholds from register
         read_frame_counter_threshhold.execute((bit<8>)eg_md.metadata_index, thresholds.frame_thresh);
         read_packet_counter_threshhold.execute((bit<8>)eg_md.metadata_index, thresholds.packet_thresh);
@@ -1900,13 +1928,13 @@ control Egress(
         //bit<8> packet_threshhold_value = read_packet_counter_threshhold.execute((bit<8>)eg_md.metadata_index); // set thrshhold value
         
         if(eg_intr_md.egress_port != MIRROR_PORT && eg_intr_md.egress_port != recirc_port){
-           /*
-            if (counters.frame_count < 3 ||  counters.packet_count < 20){ //  thresholds.packet_thresh){ thresholds.frame_thresh
+           
+            //if (counters.frame_count < 3 ||  counters.packet_count < 20){ //  thresholds.packet_thresh){ thresholds.frame_thresh
                 decisionMirror(); //mirrorring is trigered!
-            }
-            */
-            // table for thresholds
-            table_threshold.apply();
+            //}
+            
+            // *** table for thresholds
+            //table_threshold.apply();
         }
 
         
@@ -1923,14 +1951,12 @@ control EgressDeparser(
     Checksum() ipv4_checksum;
     
     apply {
-        if (eg_intr_dprs_md.mirror_type == HEADER_TYPE_MIRROR_EGRESS){
-            
+        if (eg_intr_dprs_md.mirror_type == HEADER_TYPE_MIRROR_EGRESS){    
             mirror.emit<mirror_h>(hdr.mirror.mirror_session, {hdr.mirror.header_type, 
                                       hdr.mirror.header_info,
                                       hdr.mirror.egress_port,
                                       hdr.mirror.mirror_session,
                                       hdr.mirror.IPG,
-                                      //hdr.mirror.testing,
                                       hdr.mirror.flowid,
                                       hdr.mirror.ifg,
                                       hdr.mirror.packet_size,
