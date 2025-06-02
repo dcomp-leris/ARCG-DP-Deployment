@@ -23,7 +23,7 @@ This paper has been submitted to the Netsoft 2025 Conference and is under review
 
 
 ## (2) Compile the P4 Code in Tofino
-      # Check to be in the froject folder
+      # Ensure you are in "~/ARCG-DP-Deployment/Tofino/V3" then
       ~/../p4_build.sh -p RF.p4
 
 **Output:**
@@ -32,7 +32,7 @@ This paper has been submitted to the Netsoft 2025 Conference and is under review
 
 ## (3) Run the P4 code
 
-      # Run compiled P4 code (RF) on Tofino2
+      # Run compiled P4 code (RF) on Tofino2 (tf2)
       ~/../run_switchd.sh  -p RF --arch tf2
 
 **Output:**
@@ -44,7 +44,7 @@ This paper has been submitted to the Netsoft 2025 Conference and is under review
       bfshell> bfrt_python
 
       # Set the CP.py file address
-      bfrt_python> %load /home/alireza/ARCG-DP-Deployment/Tofino/V2/CP.py
+      bfrt_python> %load /home/alireza/ARCG-DP-Deployment/Tofino/V3/CP.py
 
 **Output:**
 
