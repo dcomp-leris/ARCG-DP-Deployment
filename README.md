@@ -15,7 +15,7 @@ This paper has been submitted to the Netsoft 2025 Conference and is under review
 
       # Clone the Repository on your Tofino
       git clone https://github.com/dcomp-leris/ARCG-DP-Deployment.git
-      cd ARCG-DP-Deployment/Tofino/V2
+      cd ARCG-DP-Deployment/Tofino/V3
 
 **Output:**
 
