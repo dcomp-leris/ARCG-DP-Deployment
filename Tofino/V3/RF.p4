@@ -1364,7 +1364,7 @@ control Egress(
                 value =  value; //eg_md.metadata_ipg_temp;
             }
         };        
-       //frame counter
+       // Counting the frame counter
         RegisterAction<bit<32>, bit<8>, bit<32>>(timestamp_ipg_reg) update_timestamp_ipg_reg = {
             void apply(inout bit<32> value, out bit<32> result) {
                 result = value;
@@ -1373,7 +1373,7 @@ control Egress(
         }; 
 
 
-
+        // Register for reseting the frame size register
         RegisterAction<bit<16>, bit<8>, bit<16>>(frame_size_reg) reset_frame_size_reg = {
             void apply(inout bit<16> value, out bit<16> result) {
                 result = value + hdr.udp.length_;
@@ -1381,7 +1381,7 @@ control Egress(
             }
         }; 
 
-
+        // Register
         RegisterAction<bit<16>, bit<8>, bit<16>>(frame_size_reg) increase_frame_size_reg = {
             void apply(inout bit<16> value) {
                 value = value + hdr.udp.length_;
@@ -1570,7 +1570,7 @@ control Egress(
     }
         
         
-
+        // Action for cloning the packets to Ingree Pipeline to be processed  
         action decisionMirror(){
             hdr.mirror.egress_port = MIRROR_PORT;
             //hdr.mirror.egress_port = eg_intr_md.egress_port;
@@ -1594,6 +1594,7 @@ control Egress(
 
 
         // Table for Thresholds / counters.frame_count < 3 ||  counters.packet_count < 20
+        // This table is not used but is considered for future use!
         table table_threshold{
         key = {
             packet_counter_value: range;
@@ -1714,37 +1715,21 @@ control Egress(
             //}
             
             
-            /*enq qdepth avg*/
-            //bit<32> EWMA_enq_qdepth_temp;
-            // if(hdr.ipv4.ecn == 1 || hdr.ipv4.ecn == 2){
-            //     EWMA_enq_qdepth_temp = write_enq_qdepth_reg_RegisterAction.execute(eg_md.metadata_index);
-            // }
-
-            // EWMA_enq_qdepth = EWMA_enq_qdepth_temp>>1; //alpha = 0.5
-            // eg_md.metadata_enq_qdepth = EWMA_enq_qdepth;
 
             //* Compute queue delay *//
             queue_delay = (value_t)eg_intr_md_from_prsr.global_tstamp - (value_t)hdr.bridge.ingress_global_tstamp;
             hdr.bridge.setInvalid();
 
-            //switchLatencyAction.execute((value_t)eg_intr_md.egress_port); //sei la pra q isso
+            
 
             bit<32> EWMA_temp;
             
-            //if (hdr.ipv4.l4s == 1){
-            //if(hdr.ipv4.ecn == 1 || hdr.ipv4.ecn == 2){ //n preciso checar, so ir pro correto (inclui classic)
-            EWMA_temp = qdelay_l4s_action.execute(eg_md.metadata_index);
-            //}
-            //else{
-
-            //     EWMA_temp = qdelay_classic_action.execute((value_t)eg_intr_md.egress_port);
-            // }
             
+            
+            EWMA_temp = qdelay_l4s_action.execute(eg_md.metadata_index);
+                        
             EWMA = EWMA_temp>>1; //o original ta comentado aqui msm (?)
-            //eg_md.metadata_queue_delay = (bit<32>)EWMA; //OBS: o valor aqui ta com 16 bits em, ob2 n sei se tem pra q isso se n ta no int
-
-            //EWMA = queue_delay;
-
+            
 
             //INTER PACKET GAP
             bit<32> previous_timestamp = store_previous_timestamp.execute(eg_md.metadata_index);
@@ -1797,7 +1782,7 @@ control Egress(
                     if (drop_decision_l4s == true){
                         
                         mark_ecn_pkt.count((bit<32>)eg_md.metadata_index);
-                        hdr.ipv4.ecn = 3;    // Mark EC !!!
+                        hdr.ipv4.ecn = 3;    // Mark Experienced Congestion (EC) !!!
                     
                     } 
 
@@ -1855,8 +1840,8 @@ control Egress(
 
         eg_md.metadata_ipg = (bit<32>)eg_intr_md_from_prsr.global_tstamp - previous_tstamp_ipg;
         
-        // frm_thr = 3
-        //IFG AND FRAME SIZE
+       
+        
         //SAVE TIMESTAMP OF THE EGRESS WHEN MARKER IS 1 AND JUST READSUBSTITUTE AGAIN WHEN A NEW MARKER
         
 
@@ -1877,7 +1862,7 @@ control Egress(
                     //AND SEND PA
 
                     eg_md.metadata_frame_size = reset_frame_size_reg.execute(eg_md.metadata_flowID);
-                    //Alireza start
+                    //Alireza 
                     //RTP TIMESTAMP STORE 
                     eg_md.metadata_rtp_timestamp = update_rtp_timestamp_reg.execute(eg_md.metadata_flowID);
                     eg_md.metadata_host_ifg = hdr.rtp.timestamp - eg_md.metadata_rtp_timestamp;
@@ -1889,7 +1874,7 @@ control Egress(
                     //frame_counter_value = counters.frame_count;
 
                     //counter_frames = increase_frame_counter.execute(eg_md.metadata_flowID);
-                    //Alireza end
+                    //Alireza 
                 }
                 else{
                     eg_md.metadata_frame_size = 0;
@@ -1928,9 +1913,11 @@ control Egress(
         //bit<8> packet_threshhold_value = read_packet_counter_threshhold.execute((bit<8>)eg_md.metadata_index); // set thrshhold value
         
         if(eg_intr_md.egress_port != MIRROR_PORT && eg_intr_md.egress_port != recirc_port){
-           
+            // Mirroring all packets
+             decisionMirror();
+
             //if (counters.frame_count < 3 ||  counters.packet_count < 20){ //  thresholds.packet_thresh){ thresholds.frame_thresh
-                decisionMirror(); //mirrorring is trigered!
+                //decisionMirror(); //mirrorring is trigered!
             //}
             
             // *** table for thresholds
