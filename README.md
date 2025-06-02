@@ -9,7 +9,7 @@
 This paper has been submitted to the Netsoft 2025 Conference and was accepted!
 
 ## General View 
-This repository is going to run the Random Forest (RF) model in tofino 2 to identify the AR/CG **_flows_** & mark AR/CG **_packets_** with ECT(1) as shown in Fig.1. 
+This repository is going to run the Random Forest (RF) model in tofino 2 to identify the AR/CG **_flows_** & mark AR/CG **_packets_** with ECT(1) as shown in Fig.1. It paves the way for AR/CG to be routed through L4S Queue.  
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/9f14e123-1f02-438b-8fdf-82282033ff8e" alt="Descriptive Alt Text" width="500" height="auto" style="display: block; margin: 0 auto; max-width: 100%;">
