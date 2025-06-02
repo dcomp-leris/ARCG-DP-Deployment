@@ -6,7 +6,17 @@
 
 
 ### **Note:**
-This paper has been submitted to the Netsoft 2025 Conference and is under review!
+This paper has been submitted to the Netsoft 2025 Conference and was accepted!
+
+## General View 
+This repository is going to run the Random Forest (RF) model in tofino 2 to identify the application & mark AR/CG packets with ECT(1) as shown in Figure (1). 
+
+![image](https://github.com/user-attachments/assets/9f14e123-1f02-438b-8fdf-82282033ff8e)
+
+## Topology & Setup
+
+![image](https://github.com/user-attachments/assets/bfbbd937-484f-4e5c-97ab-f0a8b168bc75)
+
 
 
 ## (1) Connect Tofino & Clone P4 Code
