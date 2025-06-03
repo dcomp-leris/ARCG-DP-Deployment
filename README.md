@@ -26,9 +26,9 @@ To do the experiment, we use the below topology and setup to evaluate the model 
 
 
 
+### (A) P4 Code Copiling & Running on Tofino 2 
 
-
-## (1) Connect Tofino & Clone P4 Code
+#### (1) Connect Tofino & Clone P4 Code
       ssh [username]@[IP]    # Replace your username & Tofino IP
       pass: xxxx             # Tofino password
 
@@ -41,7 +41,7 @@ To do the experiment, we use the below topology and setup to evaluate the model 
    ![image](https://github.com/user-attachments/assets/59d0e906-fa76-41dd-93be-78a22efd0c05)
 
 
-## (2) Compile the P4 Code in Tofino
+#### (2) Compile the P4 Code in Tofino
       # Ensure you are in "~/ARCG-DP-Deployment/Tofino/V3" then
       ~/../p4_build.sh -p RF.p4
 
@@ -49,7 +49,7 @@ To do the experiment, we use the below topology and setup to evaluate the model 
 
 ![image](https://github.com/user-attachments/assets/b742f937-c749-403c-82c4-92a3012e472a)
 
-## (3) Run the P4 code
+#### (3) Run the P4 code
 
       # Run compiled P4 code (RF) on Tofino2 (tf2)
       ~/../run_switchd.sh  -p RF --arch tf2
@@ -58,7 +58,7 @@ To do the experiment, we use the below topology and setup to evaluate the model 
 
 ![image](https://github.com/user-attachments/assets/2651dab0-8e8a-47c6-8e00-0a4416f0f0e0)
 
-## (4) Run the Controllr code
+#### (4) Run the Controllr code
       
       bfshell> bfrt_python
 
@@ -70,12 +70,10 @@ To do the experiment, we use the below topology and setup to evaluate the model 
 ![image](https://github.com/user-attachments/assets/3ad83274-003f-4869-a809-5250379c8058)
 
 
-## (5) Results
+#### (5) Results
 RF AR/CG Classifier + Automatic ECT Marking + Forwarding (L4S + Classic) Queues are running!
 
-
-![image](https://github.com/user-attachments/assets/cde365e7-f644-4c57-8498-8d291aa1a392)
-
+### (B) P4 Code Copiling & Running on Tofino 2 
 
 
 
