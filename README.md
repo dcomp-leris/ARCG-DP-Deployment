@@ -24,8 +24,6 @@ To do the experiment, we use the below topology and setup to evaluate the model 
 
 
 
-
-
 ### (A) P4 Code Copiling & Running on Tofino 2 
 
 #### (1) Connect Tofino & Clone P4 Code
@@ -73,7 +71,7 @@ To do the experiment, we use the below topology and setup to evaluate the model 
 #### (5) Results
 RF AR/CG Classifier + Automatic ECT Marking + Forwarding (L4S + Classic) Queues are running!
 
-### (B) P4 Code Copiling & Running on Tofino 2 
+### (B) Server 1 Configuration 
 
 
 
