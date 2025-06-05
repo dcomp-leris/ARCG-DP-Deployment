@@ -17,6 +17,15 @@ This repository is going to run the Random Forest (RF) model in tofino 2 to iden
   <img src="https://github.com/user-attachments/assets/9f14e123-1f02-438b-8fdf-82282033ff8e" alt="Descriptive Alt Text" width="500" height="auto" style="display: block; margin: 0 auto; max-width: 100%;">
 </p>
 
+## Repository Navigation
+
+![image](https://github.com/user-attachments/assets/b9dcc6b3-aa36-4020-af0e-c62e204c524e)
+
+
+
+
+
+
 ## Topology & Setup
 To do the experiment, we use the below topology and setup to evaluate the model as shown in Fig.4. 
 
