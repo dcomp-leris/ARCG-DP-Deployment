@@ -3,6 +3,8 @@
 [![Conference](https://img.shields.io/badge/submitted-Netsoft2025-blue)](https://netsoft2025.ieee-netsoft.org)
 [![Conference](https://img.shields.io/badge/Acceptance-Netsoft2025-yellow)](https://netsoft2025.ieee-netsoft.org)
 [![Event](https://img.shields.io/badge/Event-Netsoft2025-red)](https://netsoft2025.ieee-netsoft.org/program)
+[![Presentation](https://img.shields.io/badge/Presentation-Netsoft2025-green)](https://docs.google.com/presentation/d/17G_gH58o-Is9wHY_llHknBOVOjm30t07b-QE5o4wmqM/edit?usp=sharing)
+
 
 
 ### **Note:**
