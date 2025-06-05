@@ -11,8 +11,19 @@ import sys
 import pdb
 import time
 
+import os
+import sys
+import pdb
+import time
+
 # Principle Setup ***********************************************************************
-SDE_INSTALL   = os.environ['SDE_INSTALL']
+
+#SDE_INSTALL   = os.environ['SDE_INSTALL']
+#SDE_PYTHON2   = os.path.join(SDE_INSTALL, 'lib', 'python2.7', 'site-packages')
+
+# Principle Setup ***********************************************************************
+# SDE_INSTALL   = os.environ['SDE_INSTALL']
+SDE_INSTALL = os.environ.get('SDE_INSTALL', '/home/leris/sde/bf-sde-9.13.4/install')
 SDE_PYTHON2   = os.path.join(SDE_INSTALL, 'lib', 'python2.7', 'site-packages')
 sys.path.append(SDE_PYTHON2)
 sys.path.append(os.path.join(SDE_PYTHON2, 'tofino'))

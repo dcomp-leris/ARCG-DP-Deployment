@@ -1902,7 +1902,7 @@ control Egress(
 
         eg_md.metadata_queue_delay_new = (bit<32>) eg_intr_md_from_prsr.global_tstamp - (bit<32>)hdr.bridge.ingress_global_tstamp;
 
-        hdr.bridge.setInvalid(); //vai que
+        hdr.bridge.setInvalid(); 
 
         increase_packet_counter_flowbased.execute((bit<8>)eg_md.metadata_index, packet_counter_value); //counters.packet_count);
         //packet_counter_value = counters.packet_count;
